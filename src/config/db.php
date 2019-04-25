@@ -7,6 +7,7 @@
  *
  * @see craft\config\DbConfig
  */
+include '.env';
 
 return [
     'driver' => getenv('DB_DRIVER'),

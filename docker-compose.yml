@@ -6,14 +6,12 @@ services:
 ##        CRAFT       ##
 ## php:7.2-fpm-alpine ##
 ########################
-  craft:
+  php:
     build: 
       context: .
       dockerfile: ./docker-config/alpine-php/Dockerfile
     networks:
       - backend
-    expose: 
-      - "9000"
     volumes:
       - cpresources:/var/www/html/web/cpresources
       - ./src/composer.json:/var/www/html/composer.json
@@ -43,14 +41,14 @@ services:
     build: 
       context: .
       dockerfile: ./docker-config/alpine-apache/Dockerfile
-    depends_on:
-      - craft
+    links:
+      - php
       - mysql
     networks:
       - frontend
       - backend
     ports:
-      - "80:80"
+      - 80:80
     volumes:
       - cpresources:/var/www/html/web/cpresources
       - ./src/web:/var/www/html/web
@@ -71,7 +69,7 @@ services:
     networks:
       - backend
     ports:
-      - "3306:3306"
+      - 3306:3306
     volumes:
       - mysql-data:/var/lib/mysql
       - cpresources:/var/www/html/web/cpresources
