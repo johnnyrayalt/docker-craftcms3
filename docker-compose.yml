@@ -1,12 +1,66 @@
 version: "3.7"
 
-# Named volumes
-volumes: 
-  mysql-data:
+services: 
 
-services:
-  # MySQL database
-  mysql-data:
+########################
+##        CRAFT       ##
+## php:7.2-fpm-alpine ##
+########################
+  craft:
+    build: 
+      context: .
+      dockerfile: ./docker-config/alpine-php/Dockerfile
+    networks:
+      - backend
+    expose: 
+      - "9000"
+    volumes:
+      - cpresources:/var/www/html/web/cpresources
+      - ./src/composer.json:/var/www/html/composer.json
+      - ./src/composer.lock:/var/www/html/composer.lock
+      - ./src/config:/var/www/html/config
+      - ./src/modules:/var/www/html/modules
+      - ./src/templates:/var/www/html/templates
+      - ./src/web:/var/www/html/web
+    environment:
+      ENVIRONMENT: "dev"
+      DB_DRIVER: "mysql"
+      DB_SERVER: "localhost"
+      DB_USER: "root"
+      DB_PASSWORD: "password"
+      DB_DATABASE: "mysql-data"
+      DB_SCHEMA: "public"
+      DB_TABLE_PREFIX: "craft_"
+      SITE_URL: "http://localhost"
+      SECURITY_KEY: "AAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    container_name: craft
+
+######################
+##      APACHE      ##
+## httpd:2.4-alpine ##
+######################
+  apache:
+    build: 
+      context: .
+      dockerfile: ./docker-config/alpine-apache/Dockerfile
+    depends_on:
+      - craft
+      - mysql
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "80:80"
+    volumes:
+      - cpresources:/var/www/html/web/cpresources
+      - ./src/web:/var/www/html/web
+    container_name: apache
+
+#############
+##  MYSQL  ##
+## mysql:8 ##
+#############
+  mysql:
     image: mysql:8
     restart: always
     environment:
@@ -14,9 +68,26 @@ services:
       MYSQL_USER: "root"
       MYSQL_PASSWORD: "password"
       MYSQL_ROOT_PASSWORD: "password"
+    networks:
+      - backend
     ports:
       - "3306:3306"
-    expose:
-      - "3306"
     volumes:
       - mysql-data:/var/lib/mysql
+      - cpresources:/var/www/html/web/cpresources
+    container_name: mysql
+
+
+# Named volumes
+volumes: 
+  cpresources: #default driver: "local"
+  mysql-data: #default driver: "local"
+
+# Networks
+networks:
+  backend: #default driver: bridge
+  frontend: #default driver: bridge
+
+
+
+
