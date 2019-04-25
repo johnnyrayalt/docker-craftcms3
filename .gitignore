@@ -1,6 +1,8 @@
 # Environment #
 ###############
 .env
+*.key
+*.crt
 
 # Compiled source #
 ###################
