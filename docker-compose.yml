@@ -13,19 +13,19 @@ services:
     networks:
       - backend
     expose:
-        - 9000
+      - 9000
     volumes:
       - cpresources:/var/www/html/web/cpresources
-      - ./src/composer.json:/var/www/html/composer.json
-      - ./src/composer.lock:/var/www/html/composer.lock
-      - ./src/config:/var/www/html/config
-      - ./src/modules:/var/www/html/modules
-      - ./src/templates:/var/www/html/templates
-      - ./src/web:/var/www/html/web
+      # - ./src/composer.json:/var/www/html/composer.json
+      # - ./src/composer.lock:/var/www/html/composer.lock
+      # - ./src/config:/var/www/html/config
+      # - ./src/modules:/var/www/html/modules
+      # - ./src/templates:/var/www/html/templates
+      # - ./src/web:/var/www/html/web
     environment:
       ENVIRONMENT: "dev"
       DB_DRIVER: "mysql"
-      DB_SERVER: "localhost"
+      DB_SERVER: "mysql"
       DB_USER: "root"
       DB_PASSWORD: "password"
       DB_DATABASE: "mysql-data"
@@ -35,27 +35,6 @@ services:
       SECURITY_KEY: "AAAAAAAAAAAAAAAAAAAAAAAAAAA"
     container_name: craft
 
-######################
-##      APACHE      ##
-## httpd:2.4-alpine ##
-######################
-  # apache:
-  #   build: 
-  #     context: .
-  #     dockerfile: ./docker-config/alpine-apache/Dockerfile
-  #   links:
-  #     - php
-  #     - mysql
-  #   networks:
-  #     - frontend
-  #     - backend
-  #   ports:
-  #     - 80:80
-  #     - 443:443
-  #   volumes:
-  #     - cpresources:/var/www/html/web/cpresources
-  #     - ./src/web:/var/www/html/web
-  #   container_name: apache
 
 ##########################
 ##         NGINX        ##
@@ -69,13 +48,12 @@ services:
       - php
       - mysql
     networks:
-      - frontend
       - backend
     ports:
       - 80:80
     volumes:
       - cpresources:/var/www/html/web/cpresources
-      - ./src/web:/var/www/html/web
+      # - ./src/web:/var/www/html/web
     container_name: nginx
 
 #############
@@ -113,3 +91,24 @@ networks:
 
 
 
+######################
+##      APACHE      ##
+## httpd:2.4-alpine ##
+######################
+  # apache:
+  #   build: 
+  #     context: .
+  #     dockerfile: ./docker-config/alpine-apache/Dockerfile
+  #   links:
+  #     - php
+  #     - mysql
+  #   networks:
+  #     - frontend
+  #     - backend
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   volumes:
+  #     - cpresources:/var/www/html/web/cpresources
+  #     - ./src/web:/var/www/html/web
+  #   container_name: apache

@@ -104,6 +104,8 @@ COPY --chown=www-data:www-data ./src/config /var/www/html/config
 COPY --chown=www-data:www-data ./src/modules /var/www/html/modules
 COPY --chown=www-data:www-data ./src/templates /var/www/html/templates
 COPY --chown=www-data:www-data ./src/web /var/www/html/web
+COPY --chown=www-data:www-data ./src/vendor /var/www/html/vendor
+COPY --chown=www-data:www-data ./src/storage /var/www/html/storage
 COPY --chown=www-data:www-data ./src/composer.json /var/www/html/composer.json
 COPY --chown=www-data:www-data ./src/craft /var/www/html/craft
 
