@@ -16,12 +16,12 @@ services:
       - 9000
     volumes:
       - cpresources:/var/www/html/web/cpresources
-      # - ./src/composer.json:/var/www/html/composer.json
-      # - ./src/composer.lock:/var/www/html/composer.lock
-      # - ./src/config:/var/www/html/config
-      # - ./src/modules:/var/www/html/modules
-      # - ./src/templates:/var/www/html/templates
-      # - ./src/web:/var/www/html/web
+      - ./src/composer.json:/var/www/html/composer.json
+      - ./src/composer.lock:/var/www/html/composer.lock
+      - ./src/config:/var/www/html/config
+      - ./src/modules:/var/www/html/modules
+      - ./src/templates:/var/www/html/templates
+      - ./src/web:/var/www/html/web
     environment:
       ENVIRONMENT: "dev"
       DB_DRIVER: "mysql"
@@ -53,7 +53,7 @@ services:
       - 80:80
     volumes:
       - cpresources:/var/www/html/web/cpresources
-      # - ./src/web:/var/www/html/web
+      - ./src/web:/var/www/html/web
     container_name: nginx
 
 #############
@@ -86,7 +86,6 @@ volumes:
 # Networks
 networks:
   backend: #default driver: bridge
-  frontend: #default driver: bridge
 
 
 
