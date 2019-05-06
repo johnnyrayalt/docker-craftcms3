@@ -2,6 +2,27 @@ version: "3.7"
 
 services: 
 
+##########################
+##         NGINX        ##
+## nginx:1.15.12-alpine ##
+##########################
+  nginx:
+    build: 
+      context: .
+      dockerfile: ./docker-config/alpine-nginx/Dockerfile
+    links:
+      - php
+      - mysql
+    networks:
+      - frontend
+      - backend
+    ports:
+      - 80:80
+    volumes:
+      - cpresources:/var/www/html/web/cpresources
+      - ./src/web:/var/www/html/web
+    container_name: nginx
+
 ########################
 ##        CRAFT       ##
 ## php:7.2-fpm-alpine ##
@@ -12,6 +33,8 @@ services:
       dockerfile: ./docker-config/alpine-php/Dockerfile
     networks:
       - backend
+    expose:
+        - 9000
     volumes:
       - cpresources:/var/www/html/web/cpresources
       - ./src/composer.json:/var/www/html/composer.json
@@ -37,22 +60,24 @@ services:
 ##      APACHE      ##
 ## httpd:2.4-alpine ##
 ######################
-  apache:
-    build: 
-      context: .
-      dockerfile: ./docker-config/alpine-apache/Dockerfile
-    links:
-      - php
-      - mysql
-    networks:
-      - frontend
-      - backend
-    ports:
-      - 80:80
-    volumes:
-      - cpresources:/var/www/html/web/cpresources
-      - ./src/web:/var/www/html/web
-    container_name: apache
+  # apache:
+  #   build: 
+  #     context: .
+  #     dockerfile: ./docker-config/alpine-apache/Dockerfile
+  #   links:
+  #     - php
+  #     - mysql
+  #   networks:
+  #     - frontend
+  #     - backend
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   volumes:
+  #     - cpresources:/var/www/html/web/cpresources
+  #     - ./src/web:/var/www/html/web
+  #   container_name: apache
+
 
 #############
 ##  MYSQL  ##
