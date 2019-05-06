@@ -2,27 +2,6 @@ version: "3.7"
 
 services: 
 
-##########################
-##         NGINX        ##
-## nginx:1.15.12-alpine ##
-##########################
-  nginx:
-    build: 
-      context: .
-      dockerfile: ./docker-config/alpine-nginx/Dockerfile
-    links:
-      - php
-      - mysql
-    networks:
-      - frontend
-      - backend
-    ports:
-      - 80:80
-    volumes:
-      - cpresources:/var/www/html/web/cpresources
-      - ./src/web:/var/www/html/web
-    container_name: nginx
-
 ########################
 ##        CRAFT       ##
 ## php:7.2-fpm-alpine ##
@@ -78,6 +57,26 @@ services:
   #     - ./src/web:/var/www/html/web
   #   container_name: apache
 
+##########################
+##         NGINX        ##
+## nginx:1.15.12-alpine ##
+##########################
+  nginx:
+    build: 
+      context: .
+      dockerfile: ./docker-config/alpine-nginx/Dockerfile
+    links:
+      - php
+      - mysql
+    networks:
+      - frontend
+      - backend
+    ports:
+      - 80:80
+    volumes:
+      - cpresources:/var/www/html/web/cpresources
+      - ./src/web:/var/www/html/web
+    container_name: nginx
 
 #############
 ##  MYSQL  ##
