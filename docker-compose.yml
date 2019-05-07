@@ -22,17 +22,19 @@ services:
       - ./src/modules:/var/www/html/modules
       - ./src/templates:/var/www/html/templates
       - ./src/web:/var/www/html/web
-    environment:
-      ENVIRONMENT: "dev"
-      DB_DRIVER: "mysql"
-      DB_SERVER: "mysql"
-      DB_USER: "root"
-      DB_PASSWORD: "password"
-      DB_DATABASE: "mysql-data"
-      DB_SCHEMA: "public"
-      DB_TABLE_PREFIX: "craft_"
-      SITE_URL: "http://localhost"
-      SECURITY_KEY: "AAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    env_file:
+      - ./src/web/.env
+    # environment:
+    #   ENVIRONMENT: "dev"
+    #   DB_DRIVER: "mysql"
+    #   DB_SERVER: "mysql"
+    #   DB_USER: "root"
+    #   DB_PASSWORD: "password"
+    #   DB_DATABASE: "mysql-data"
+    #   DB_SCHEMA: "public"
+    #   DB_TABLE_PREFIX: "craft_"
+    #   SITE_URL: "http://localhost"
+    #   SECURITY_KEY: "AAAAAAAAAAAAAAAAAAAAAAAAAAA"
     container_name: craft
 
 
