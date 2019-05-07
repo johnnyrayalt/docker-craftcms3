@@ -1,15 +1,12 @@
 FROM php:7.2-fpm-alpine
 
 RUN apk --update add \
-        aspell-dev \
         autoconf \
         build-base \
         ca-certificates \
         linux-headers \
         libaio-dev \
         zlib-dev \
-        curl \
-        g++ \
         git \
         subversion \
         freetype-dev \
@@ -36,27 +33,25 @@ RUN apk --update add \
         ffmpeg \
         wget \
     && docker-php-ext-install \
-        bcmath \
+        # bcmath \
         zip \
-        bz2 \
-        intl \
-        gettext \
-        exif \
-        ftp \
+        # bz2 \
+        # intl \
+        # gettext \
+        # exif \
         pdo_mysql \
         mysqli \
-        simplexml \
+        # simplexml \
         opcache \
         sockets \
-        shmop \
-        sysvmsg \
-        sysvsem \
-        sysvshm \
-        mbstring \
-        pcntl \
-        xsl \
-        pspell \
-        iconv \
+        # shmop \
+        # sysvmsg \
+        # sysvsem \
+        # sysvshm \
+        # pcntl \
+        # xsl \
+        # pspell \
+        # iconv \
     && docker-php-ext-configure \
         gd \
         --with-freetype-dir=/usr/include/ \
