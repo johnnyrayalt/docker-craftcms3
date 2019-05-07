@@ -3,47 +3,45 @@ FROM php:7.2-fpm-alpine
 RUN apk --update add \
         autoconf \
         build-base \
-        ca-certificates \
-        linux-headers \
-        libaio-dev \
-        zlib-dev \
         git \
-        subversion \
-        freetype-dev \
-        bzip2-dev \
-        freetype-dev \
         icu-dev \
-        gettext-dev \
-        libjpeg-turbo-dev \
         imagemagick-dev \
-        libmcrypt-dev \
-        libpng-dev \
-        libtool \
-        libbz2 \
-        openssl-dev \
-        libstdc++ \
-        libxslt-dev \
         libzip-dev \
         mysql-client \
-        openldap-dev \
-        imagemagick-dev \
-        hiredis-dev \
-        make \
-        unzip \
-        ffmpeg \
+        openssl-dev \
         wget \
+        unzip \
+        # libstdc++ \
+        # ca-certificates \
+        # linux-headers \
+        # libaio-dev \
+        # zlib-dev \
+        # subversion \
+        # freetype-dev \
+        # bzip2-dev \
+        # freetype-dev \
+        # gettext-dev \
+        # libjpeg-turbo-dev \
+        # libpng-dev \
+        # libtool \
+        # libbz2 \
+        # libxslt-dev \
+        # openldap-dev \
+        # hiredis-dev \
+        # make \
+        # ffmpeg \
     && docker-php-ext-install \
-        # bcmath \
+        iconv \
+        intl \
+        mysqli \
+        pdo_mysql \
+        sockets \
         zip \
+        # bcmath \
         # bz2 \
-        # intl \
         # gettext \
         # exif \
-        pdo_mysql \
-        mysqli \
         # simplexml \
-        opcache \
-        sockets \
         # shmop \
         # sysvmsg \
         # sysvsem \
@@ -51,26 +49,13 @@ RUN apk --update add \
         # pcntl \
         # xsl \
         # pspell \
-        # iconv \
-    && docker-php-ext-configure \
-        gd \
-        --with-freetype-dir=/usr/include/ \
-        --with-jpeg-dir=/usr/include/ \
     && pecl install \
         imagick \
     && docker-php-ext-enable \
         imagick \
-    && docker-php-ext-install \
-        gd \
-    && docker-php-ext-enable \
-        opcache \
-    && pecl install \
-        mcrypt-1.0.1 \
-    && docker-php-ext-enable \
-        mcrypt \
     && apk del build-base \
-        linux-headers \
-        libaio-dev \
+    #     linux-headers \
+    #     libaio-dev \
     && rm -rf /var/cache/apk/*
 
 ENV COMPOSER_HOME /composer
