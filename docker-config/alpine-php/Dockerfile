@@ -90,7 +90,6 @@ RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
 
 RUN php /tmp/composer-setup.php --no-ansi --install-dir=/usr/local/bin --filename=composer --snapshot && rm -rf /tmp/composer-setup.php
 
-VOLUME /var/www
 WORKDIR /var/www
 
 RUN composer global require hirak/prestissimo
@@ -101,22 +100,8 @@ RUN echo "upload_max_filesize = 10M" > /usr/local/etc/php/php.ini \
     && echo "max_execution_time = 300" >> /usr/local/etc/php/php.ini \
     && echo "memory_limit = 256M" >> /usr/local/etc/php/php.ini
 
-COPY --chown=www-data:www-data ./src/config /var/www/html/config
-COPY --chown=www-data:www-data ./src/modules /var/www/html/modules
-COPY --chown=www-data:www-data ./src/templates /var/www/html/templates
-COPY --chown=www-data:www-data ./src/web /var/www/html/web
-COPY --chown=www-data:www-data ./src/vendor /var/www/html/vendor
-COPY --chown=www-data:www-data ./src/storage /var/www/html/storage
-COPY --chown=www-data:www-data ./src/composer.json /var/www/html/composer.json
-COPY --chown=www-data:www-data ./src/craft /var/www/html/craft
+RUN composer create-project craftcms/craft /var/www/html
 
-RUN mkdir -p /var/www/html/storage/rebrand  \
-    && mkdir -p /var/www/html/storage/runtime/mutex  \
-    && mkdir -p /var/www/html/storage/logs  \
-    && chown -R www-data:www-data /var/www/html/storage
-
-RUN composer install -d /var/www/html/ \
-    && chown -R www-data:www-data /var/www/html/vendor \
-    && chown -R www-data:www-data /var/www/html/composer.lock
+RUN chown -R www-data:www-data /var/www/html
 
 CMD php-fpm
