@@ -1,5 +1,6 @@
 FROM php:7.2-fpm-alpine
 
+### ALPINE PACKAGES
 RUN apk --update add \
         autoconf \
         build-base \
@@ -30,12 +31,16 @@ RUN apk --update add \
         # hiredis-dev \
         # make \
         # ffmpeg \
+### PHP PACKAGES
     && docker-php-ext-install \
         iconv \
         intl \
         mysqli \
         pdo_mysql \
         sockets \
+        sysvmsg \
+        sysvsem \
+        sysvshm \
         zip \
         # bcmath \
         # bz2 \
@@ -43,9 +48,6 @@ RUN apk --update add \
         # exif \
         # simplexml \
         # shmop \
-        # sysvmsg \
-        # sysvsem \
-        # sysvshm \
         # pcntl \
         # xsl \
         # pspell \
@@ -83,5 +85,12 @@ RUN echo "upload_max_filesize = 10M" > /usr/local/etc/php/php.ini \
 RUN composer create-project craftcms/craft /var/www/html
 
 RUN chown -R www-data:www-data /var/www/html
+
+### REMOVES COMPOSER TO REDUCE IMAGE SIZE
+WORKDIR /
+
+RUN rm -rf /composer
+
+WORKDIR /var/www
 
 CMD php-fpm
