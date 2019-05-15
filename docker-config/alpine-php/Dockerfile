@@ -2,63 +2,63 @@ FROM php:7.2-fpm-alpine
 
 ### ALPINE PACKAGES
 RUN apk --update add \
-        autoconf \
-        build-base \
-        git \
-        icu-dev \
-        imagemagick-dev \
-        libzip-dev \
-        mysql-client \
-        openssl-dev \
-        wget \
-        unzip \
-        # libstdc++ \
-        # ca-certificates \
-        # linux-headers \
-        # libaio-dev \
-        # zlib-dev \
-        # subversion \
-        # freetype-dev \
-        # bzip2-dev \
-        # freetype-dev \
-        # gettext-dev \
-        # libjpeg-turbo-dev \
-        # libpng-dev \
-        # libtool \
-        # libbz2 \
-        # libxslt-dev \
-        # openldap-dev \
-        # hiredis-dev \
-        # make \
-        # ffmpeg \
-### PHP PACKAGES
-    && docker-php-ext-install \
-        iconv \
-        intl \
-        mysqli \
-        pdo_mysql \
-        sockets \
-        sysvmsg \
-        sysvsem \
-        sysvshm \
-        zip \
-        # bcmath \
-        # bz2 \
-        # gettext \
-        # exif \
-        # simplexml \
-        # shmop \
-        # pcntl \
-        # xsl \
-        # pspell \
-    && pecl install \
-        imagick \
-    && docker-php-ext-enable \
-        imagick \
-    && apk del build-base \
-    #     linux-headers \
-    #     libaio-dev \
-    && rm -rf /var/cache/apk/*
+  autoconf \
+  build-base \
+  git \
+  icu-dev \
+  imagemagick-dev \
+  libzip-dev \
+  mysql-client \
+  openssl-dev \
+  wget \
+  unzip \
+  # libstdc++ \
+  # ca-certificates \
+  # linux-headers \
+  # libaio-dev \
+  # zlib-dev \
+  # subversion \
+  # freetype-dev \
+  # bzip2-dev \
+  # freetype-dev \
+  # gettext-dev \
+  # libjpeg-turbo-dev \
+  # libpng-dev \
+  # libtool \
+  # libbz2 \
+  # libxslt-dev \
+  # openldap-dev \
+  # hiredis-dev \
+  # make \
+  # ffmpeg \
+  ### PHP PACKAGES
+  && docker-php-ext-install \
+  iconv \
+  intl \
+  mysqli \
+  pdo_mysql \
+  sockets \
+  sysvmsg \
+  sysvsem \
+  sysvshm \
+  zip \
+  # bcmath \
+  # bz2 \
+  # gettext \
+  # exif \
+  # simplexml \
+  # shmop \
+  # pcntl \
+  # xsl \
+  # pspell \
+  && pecl install \
+  imagick \
+  && docker-php-ext-enable \
+  imagick \
+  && apk del build-base \
+  #     linux-headers \
+  #     libaio-dev \
+  && rm -rf /var/cache/apk/*
 
 ENV COMPOSER_HOME /composer
 
@@ -77,20 +77,20 @@ WORKDIR /var/www
 RUN composer global require hirak/prestissimo
 
 RUN echo "upload_max_filesize = 10M" > /usr/local/etc/php/php.ini \
-    && echo "output_buffering = On" >> /usr/local/etc/php/php.ini \
-    && echo "post_max_size = 10M" >> /usr/local/etc/php/php.ini \
-    && echo "max_execution_time = 300" >> /usr/local/etc/php/php.ini \
-    && echo "memory_limit = 256M" >> /usr/local/etc/php/php.ini
+  && echo "output_buffering = On" >> /usr/local/etc/php/php.ini \
+  && echo "post_max_size = 10M" >> /usr/local/etc/php/php.ini \
+  && echo "max_execution_time = 300" >> /usr/local/etc/php/php.ini \
+  && echo "memory_limit = 256M" >> /usr/local/etc/php/php.ini
 
 RUN composer create-project craftcms/craft /var/www/html
 
 RUN chown -R www-data:www-data /var/www/html
 
 ### REMOVES COMPOSER TO REDUCE IMAGE SIZE
-WORKDIR /
+# WORKDIR /
 
-RUN rm -rf /composer
+# RUN rm -rf /composer
 
-WORKDIR /var/www
+# WORKDIR /var/www
 
 CMD php-fpm
