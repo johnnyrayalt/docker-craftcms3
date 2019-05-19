@@ -1,6 +1,12 @@
 # docker-craftcms3
 Boiler plate code for Craft CMS using LEMP services in a docker container
 
+
+## requirements
++ at least Docker version 18.09.2
++ at least docker-compose version 1.23.2
++ dump.sql file in the `./data` directory
+
 under development
 #### KNOWN BUGS
 + after importing dump.sql into db, craft3 tries to migrate and update the DB schema. this will wipe the newly imported sql file and cause Craft to 504: gateway timeout
