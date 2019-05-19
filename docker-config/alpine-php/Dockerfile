@@ -12,25 +12,6 @@ RUN apk --update add \
   openssl-dev \
   wget \
   unzip \
-  # libstdc++ \
-  # ca-certificates \
-  # linux-headers \
-  # libaio-dev \
-  # zlib-dev \
-  # subversion \
-  # freetype-dev \
-  # bzip2-dev \
-  # freetype-dev \
-  # gettext-dev \
-  # libjpeg-turbo-dev \
-  # libpng-dev \
-  # libtool \
-  # libbz2 \
-  # libxslt-dev \
-  # openldap-dev \
-  # hiredis-dev \
-  # make \
-  # ffmpeg \
   ### PHP PACKAGES
   && docker-php-ext-install \
   iconv \
@@ -38,26 +19,15 @@ RUN apk --update add \
   mysqli \
   pdo_mysql \
   sockets \
-  sysvmsg \
-  sysvsem \
-  sysvshm \
+  sysvmsg sysvsem sysvshm \
   zip \
-  # bcmath \
-  # bz2 \
-  # gettext \
-  # exif \
-  # simplexml \
-  # shmop \
-  # pcntl \
-  # xsl \
-  # pspell \
+  ### PHP INSTALL USING PECL
   && pecl install \
   imagick \
+  ### PHP INSTALL USING DOCKER
   && docker-php-ext-enable \
   imagick \
   && apk del build-base \
-  #     linux-headers \
-  #     libaio-dev \
   && rm -rf /var/cache/apk/*
 
 ENV COMPOSER_HOME /composer
