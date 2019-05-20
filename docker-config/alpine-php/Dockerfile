@@ -10,6 +10,7 @@ RUN apk --update add \
   libzip-dev \
   mysql-client \
   openssl-dev \
+  tzdata \
   wget \
   unzip \
   ### PHP PACKAGES
@@ -46,21 +47,21 @@ WORKDIR /var/www
 
 RUN composer global require hirak/prestissimo
 
-RUN echo "upload_max_filesize = 10M" > /usr/local/etc/php/php.ini \
+RUN echo "upload_max_filesize = 40M" > /usr/local/etc/php/php.ini \
   && echo "output_buffering = On" >> /usr/local/etc/php/php.ini \
-  && echo "post_max_size = 10M" >> /usr/local/etc/php/php.ini \
-  && echo "max_execution_time = 300" >> /usr/local/etc/php/php.ini \
+  && echo "post_max_size = 40M" >> /usr/local/etc/php/php.ini \
+  && echo "max_execution_time = 300000" >> /usr/local/etc/php/php.ini \
   && echo "memory_limit = 256M" >> /usr/local/etc/php/php.ini
 
 RUN composer create-project craftcms/craft /var/www/html
 
+WORKDIR /var/www/html/config
+
+### turns off backing up DB when updating as this can break the install
+RUN sed -i "/'defaultWeekStartDay' => 1,/a 'backupDbOnUpdate' => false," general.php
+
+WORKDIR /var/www
+
 RUN chown -R www-data:www-data /var/www/html
-
-### REMOVES COMPOSER TO REDUCE IMAGE SIZE
-# WORKDIR /
-
-# RUN rm -rf /composer
-
-# WORKDIR /var/www
 
 CMD php-fpm
