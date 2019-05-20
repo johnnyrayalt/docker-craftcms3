@@ -47,21 +47,7 @@ $ docker-compose build
 ```
 $ docker-compose up
 ```
-or to run daemon in background
-```
-$ docker-compose up -d
-```
-import the existing dump.sql into the correct database
-```
-$ docker exec -i mysql bash
-```
-```
-shell > # cd docker-entrypoint-initdb.d/
-shell > # mysql -u ${DB_USER} -p${DB_ROOT_PASSWORD} mysql-data
-```
-```
-mysql > source dump.sql;
-```
+or to run daemon in background add `-d` flag
 
 go to http://localhost/admin to view
 
