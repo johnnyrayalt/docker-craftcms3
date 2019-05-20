@@ -55,12 +55,8 @@ RUN echo "upload_max_filesize = 40M" > /usr/local/etc/php/php.ini \
 
 RUN composer create-project craftcms/craft /var/www/html
 
-WORKDIR /var/www/html/config
-
 ### turns off backing up DB when updating as this can break the install
-RUN sed -i "/'defaultWeekStartDay' => 1,/a 'backupDbOnUpdate' => false," general.php
-
-WORKDIR /var/www
+RUN sed -i "/'defaultWeekStartDay' => 1,/a 'backupDbOnUpdate' => false," ./html/config/general.php
 
 RUN chown -R www-data:www-data /var/www/html
 

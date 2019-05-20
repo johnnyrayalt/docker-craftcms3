@@ -9,8 +9,9 @@ Boiler plate code for Craft CMS using LEMP services in a docker container
 
 under development
 #### KNOWN BUGS
-+ after importing dump.sql into db, craft3 tries to migrate and update the DB schema. this will wipe the newly imported sql file and cause Craft to 504: gateway timeout
-
++ Cannot download a DB backup from craft instance, must be done via command line
+    + in project root on host => docker exec mysql /usr/bin/mysqldump -u root -pcraft mysql-data > data/backup.sql
+    + potential fix: migrate to mariadb
 
 first time
 
