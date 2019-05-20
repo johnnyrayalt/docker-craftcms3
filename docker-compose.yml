@@ -34,16 +34,16 @@ services:
     volumes:
       - cpresources:/var/www/html/web/cpresources
     environment:
-      ENVIRONMENT: "dev"
-      DB_DRIVER: "mysql"
-      DB_SERVER: "mysql"
-      DB_USER: "root"
-      DB_PASSWORD: "craft"
-      DB_DATABASE: "mysql-data"
-      DB_SCHEMA: "public"
-      DB_TABLE_PREFIX: "craft_"
-      SITE_URL: "http://localhost"
-      SECURITY_KEY: "AAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ENVIRONMENT: "${ENVIRONMENT}"
+      DB_DRIVER: "${DB_DRIVER}"
+      DB_SERVER: "${DB_SERVER}" # Named after mysql service below
+      DB_USER: "${DB_USER}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+      DB_DATABASE: "${DB_DATABASE}"
+      DB_SCHEMA: "${DB_SCHEMA}"
+      DB_TABLE_PREFIX: "${DB_TABLE_PREFIX}"
+      SITE_URL: "${SITE_URL}"
+      SECURITY_KEY: "${SECURITY_KEY}"
     container_name: craft
 
 
@@ -57,24 +57,24 @@ services:
     restart: always
     command: mysqld --default-authentication-plugin=mysql_native_password
     environment:
-      MYSQL_DATABASE: "mysql-data"
-      MYSQL_USER: "root"
-      MYSQL_PASSWORD: "craft"
-      MYSQL_ROOT_PASSWORD: "craft"
-      TZ: "America/Los_Angeles"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      TZ: "${MYSQL_TZ}"
     networks:
       - backend
     expose:
       - 3306
     volumes:
       - mysql-data:/var/lib/mysql
+      - ${PATH_TO_SQL_DB}:/docker-entrypoint-initdb.d/dump.sql
     container_name: mysql
 
 
 # Named volumes
 volumes: 
   cpresources: #default driver: "local"
-  mysql-data: #default driver: "local"
+  mysql-data:
 
 # Networks
 networks:
