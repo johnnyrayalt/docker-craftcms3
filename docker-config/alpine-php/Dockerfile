@@ -8,11 +8,15 @@ RUN apk --update add \
   icu-dev \
   imagemagick-dev \
   libzip-dev \
-  mysql-client \
+  libcrypto1.1 libssl1.1 libstdc++ \
+  musl \
+  mariadb-client \
+  ncurses-libs \
   openssl-dev \
   tzdata \
   wget \
   unzip \
+  zlib \
   ### PHP PACKAGES
   && docker-php-ext-install \
   iconv \
