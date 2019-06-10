@@ -48,10 +48,10 @@ services:
 
 
 
-###############
-##  MARIADB  ##
-##  mysql:8  ##
-###############
+######################
+##      MARIADB     ##
+##  mariaDB:10.4.4  ##
+######################
   mariadb:
     image: mariadb:10.4.4
     restart: always
@@ -63,7 +63,9 @@ services:
     networks:
       - backend
     expose:
-      - 3306
+      - 3600
+    ports:
+      - 3306:3306
     volumes:
       - ${DB_DATABASE}:/var/lib/mysql
       - ${PATH_TO_SQL_DB}:/docker-entrypoint-initdb.d/dump.sql
