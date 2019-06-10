@@ -59,6 +59,10 @@ RUN echo "upload_max_filesize = 40M" > /usr/local/etc/php/php.ini \
 
 RUN composer create-project craftcms/craft /var/www/html
 
+COPY --chown=www-data:www-data ./docker-config/alpine-php/front-end/templates /var/www/html/templates
+COPY --chown=www-data:www-data ./docker-config/alpine-php/front-end/src /var/www/html/src
+
+
 ### turns off backing up DB when updating as this can break the install
 RUN sed -i "/'defaultWeekStartDay' => 1,/a 'backupDbOnUpdate' => false," ./html/config/general.php
 
