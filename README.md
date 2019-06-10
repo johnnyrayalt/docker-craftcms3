@@ -22,7 +22,7 @@ $ git clone https://github.com/johnnyrayalt/docker-craftcms3.git \
 ```
 $ echo "#PHP CRAFT ENVIRONMENT
 ENVIRONMENT=dev
-DB_DRIVER=mysql
+DB_DRIVER=mariadb
 DB_SERVER=mariadb
 DB_USER=root
 DB_PASSWORD=craft
