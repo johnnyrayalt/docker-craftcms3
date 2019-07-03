@@ -1,0 +1,15 @@
+{#
+ # Display breadcrumbs for an entry
+ # ---------------
+ # Requires variable `entry`
+ #
+#}
+
+{% if entry.level > 1 %}
+<ul class="breadcrumbs">
+  {% for crumb in entry.getAncestors() %}
+    <li class="breadcrumb breadcrumb--parent-page-link">{{ crumb.getLink() }}</li>
+  {% endfor %}
+    <li class="breadcrumb breadcrumb--current-page-link">{{ entry.getLink() }}</li>
+</ul>
+{% endif %}

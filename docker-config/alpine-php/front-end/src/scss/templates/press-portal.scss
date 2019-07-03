@@ -1,0 +1,50 @@
+.press-portal--body {
+  @include paper;
+  width: 80%;
+  @include clearfix;
+
+  @include tablet {
+    width: 100%;
+  }
+}
+
+.press-portal--download-collection {
+  margin: 1rem 0;
+  padding-left: 0;
+
+  li {
+    margin-bottom: .5rem;
+  }
+}
+
+.press-portal--download-collection-header {
+  margin-bottom: .5rem;
+  font-weight: bold;
+}
+
+.press-portal--download-collection-image {
+  object-fit: cover;
+  margin-right: 1rem;
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  margin-bottom: 2rem;
+
+  img {
+    height: 150px;
+    width: 150px;
+    object-fit: cover;
+  }
+
+  span {
+    position: absolute;
+  }
+
+  &:hover {
+    @include color-pop;
+  }
+}
+
+.press-portal--download-collection-image-info {
+  font-size: $type-size-tiny;
+}

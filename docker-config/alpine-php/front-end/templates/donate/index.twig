@@ -1,0 +1,96 @@
+{% extends "_layout" %}
+
+{% set seoTitle = entry.title %}
+{% set seoDescription = entry.introduction %}
+
+{% block content %}
+  <article class="pages">
+    <header class="section-header">
+      <h1 class="section-header--title">{{ entry.title }}</h1>
+      <ul class="breadcrumbs">
+        <li class="breadcrumb">{{ entry.subheading }}</li>
+      </ul>
+    </header>
+
+    {% if entry.featuredMedia | length %}
+      {% set media = entry.featuredMedia[0] %}
+      <figure class="featured-media">
+        {% if media.type == 'featuredImage' %}
+          <img src="{{ media.image.first().url }}">
+        {% elseif media.type == 'featuredVideo' %}
+        {% set embed = craft.embeddedAssets.fromAsset(media.video.first()) %}
+        {% if embed %}
+          {{ embed.safeHtml|raw }}
+        {% endif %}
+        {% endif %}
+      </figure>
+    {% endif %}
+
+    <div class="callout">
+      {{ entry.introduction }}
+    </div>
+
+    <section class="donate--body">
+      {{ entry.body }}
+    </section>
+
+    <section class="donate--select-level">
+      <h2 class="donate--one-time-select">Select a one-time donation</h2>
+
+      {% for block in entry.donationLevels %}
+
+      {% if block.type == "donationLevel" %}
+      <a href="/donate/payment?planAmount={{ block.amount }}" class="donate--donation-level">
+        <div class="donate--level-amount">${{ block.amount }}</div>
+        {% if block.description|length %}
+        <div class="donate--level-description">{{ block.description }}</div>
+        {% endif %}
+      </a>
+
+      {% elseif block.type == "customDonationLevel" %}
+      <a class="donate--donation-level" href="/donate/payment">
+        <div class="donate--level-amount">
+          <span>$</span>
+          <div class="donate--level-amount empty"></div>
+        </div>
+        <div class="donate--level-description">{{ block.customAmountText }}</div>
+      </a>
+      {% endif %}
+
+      {% endfor %}
+
+    </section>
+
+    <section class="donate--recurring" id="recurring">
+      <h2>Make a recurring donation</h2>
+        <form method="GET" action="/donate/payment" accept-charset="UTF-8">
+          <p class="donate--recurring-text">I want to give </p>
+
+          <div class="input-group">
+            <span class="donate--recurring-symbol">$</span>
+            <input type="number" step="5" value="{{ entry.defaultMonthlyDonationAmount }}" min="0" name="planAmount" class="donate--recurring-input">
+          </div>
+
+          <p class="donate--recurring-text">every</p>
+          <div class="input-group">
+            <select name="planInterval" class="donate--recurring-select">
+              <option value="month" selected>month</option>
+              <option value="year">year</option>
+            </select>
+          </div>
+
+          <input type="hidden" name="planIntervalCount" value="1">
+          <input type="submit" class="button donate--recurring-button" value="Donate">
+        </form>
+    </section>
+
+    <section class="text donate--alternate-payment" id="payByCheck">
+      {{ entry.payByCheckText }}
+    </section>
+
+    {% if entry.richMatrix | length %}
+    {% include 'partials/_rich_matrix' %}
+    {% endif %}
+
+  </article>
+{% endblock %}

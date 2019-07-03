@@ -1,0 +1,276 @@
+.main-content {
+  background: $color-gray-background;
+  overflow: hidden;
+  padding: 2rem 20% 2rem 4rem;
+
+  &.menu-open {
+    position: fixed;
+  }
+
+  @include tablet {
+    padding: 1rem;
+  }
+}
+
+.photo-sidebar {
+  background-repeat: no-repeat;
+  background-size: cover;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  width: 150px;
+  z-index: -1;
+
+  .mask {
+    background-color: $color-blue;
+    height: 100%;
+    mix-blend-mode: overlay;
+    opacity: .8;
+    width: 100%;
+  }
+
+  @include tablet {
+    display: none;
+  }
+}
+
+.header {
+  height: 100%;
+  position: absolute;
+  right: 0;
+  text-align: right;
+  top: 0;
+
+  @include tablet {
+    background: $color-white;
+    display: none;
+    height: auto;
+    margin-top: 65px;
+    text-align: left;
+    width: 60%;
+    z-index: 1;
+
+    &.menu-open {
+      display: block;
+    }
+
+    &.newsletter-modal-open {
+      position: fixed;
+    }
+  }
+
+  @include mobile {
+    width: 85%;
+  }
+}
+
+.mobile-container-fixed.menu-open {
+  position: fixed;
+}
+
+.footer.menu-open {
+  bottom: 0;
+  position: absolute;
+}
+
+.header-logo {
+  display: block;
+  margin-bottom: 2rem;
+  text-decoration: none;
+}
+
+.header-logo--image {
+  display: inline-block;
+  width: 20vw;
+
+  &.homepage {
+    width: 32vw;
+
+    @include tablet {
+      width: 50vw;
+    }
+
+    @include mobile {
+      width: 70vw;
+    }
+  }
+
+  @include tablet {
+    width: 30vw;
+  }
+
+  @include mobile {
+    width: 40vw;
+  }
+}
+
+.header-logo--byline {
+  display: none;
+  font-size: 1vw;
+
+  &.homepage {
+    display: block;
+    font-size: 1.35vw;
+    margin: .25rem 0 2rem;
+
+    @include tablet {
+      font-size: 2.1vw;
+    }
+
+    @include mobile {
+      font-size: 3vw;
+    }
+  }
+}
+
+.footer {
+  background: $color-black;
+  bottom: 0;
+  color: $color-gray-dark;
+  font-size: $type-size-small;
+  margin: 0 0 0 -150px;
+  overflow: hidden;
+
+  a {
+    @include rollover;
+    color: $color-gray;
+    display: block;
+  }
+
+  .block-one,
+  .block-two,
+  .block-three {
+    float: left;
+    height: 100%;
+    margin: 0;
+    padding: 2rem;
+    width: 33%;
+
+    @include tablet {
+      padding: 1rem;
+      width: 100%;
+    }
+  }
+
+  .static-links {
+    margin-top: 1rem;
+  }
+
+  .footer-sponsors {
+    width: 100%;
+    float: left;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 1rem;
+    justify-content: space-between;
+
+    @include laptop {
+      justify-content: left;
+    }
+
+    a:after {
+      display: none;
+    }
+  }
+
+  .footer-sponsors--header {
+    color: $color-gray-background;
+    width: 100%;
+    float: left;
+    margin: 1rem 0 1rem 2rem;
+
+    @include tablet {
+      margin-left: 1rem;
+    }
+  }
+
+  .footer-sponsors--logo {
+    width: 132px;
+  }
+
+  .bar {
+    @for $i from 1 through length($colors) {
+      &:nth-child(#{length($colors)}n+#{$i}) {
+        background: nth($colors, $i);
+      }
+    }
+
+    float: left;
+    height: 20px;
+    width: 16.66%;
+
+    &.first {
+      clear: left;
+    }
+
+    @include mobile {
+      display: none;
+    }
+  }
+
+  @include tablet {
+    margin: 0;
+  }
+}
+
+.callout {
+  @include paper;
+  font-size: $type-size-big;
+  font-weight: normal;
+  line-height: $type-leading-big;
+  width: 85%;
+
+  @include mobile {
+    font-size: 1.2rem;
+    width: 100%;
+  }
+}
+
+.section-header {
+  margin: 1rem 0;
+}
+
+.section-header--title {
+  margin: 0 0 .5rem;
+}
+
+.mobile-menu-mask {
+  background: $color-black;
+  display: none;
+  height: 100%;
+  opacity: .4;
+  position: fixed;
+  top: 0;
+  width: 100%;
+
+  &.menu-open {
+    display: block;
+  }
+}
+
+.goog-te-gadget {
+  div {
+    display: block !important;
+  }
+
+  span {
+    margin-right: .75rem;
+  }
+
+  @include tablet {
+    margin-left: 1rem;
+  }
+}
+
+.goog-te-combo {
+  background-image: url('../images/dropdown-arrow.svg');
+  background-position: 95% 50%;
+  background-repeat: no-repeat;
+  color: $color-black;
+  font-family: $type-family-mono !important;
+  height: 40px;
+  margin-right: .75rem !important;
+  margin: 0;
+}

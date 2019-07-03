@@ -1,0 +1,132 @@
+#calendar-wrapper{
+  .fc-toolbar{
+    text-align: left;
+    margin-bottom: .5rem;
+    .fc-right{
+      display: none;
+    }
+    .fc-left{
+      float: right;
+    }
+  }
+  .fc-left{
+    button{
+      -webkit-appearance: none;
+      -webkit-border-radius: 0;
+      background: $color-gray-background;
+      border: 0;
+      color: $color-black;
+      text-shadow: none;
+      box-shadow: none;
+      text-align: left;
+      font-family: $type-family-mono;
+      text-transform: capitalize;
+      text-decoration: underline;
+      transition: all 150ms ease-in-out;
+      &:hover{
+        color: $color-blue;
+        transform: translateY(-2px);
+      }
+
+
+
+      .fc-icon{
+        top: 0;
+        font-family: $type-family-mono;
+        overflow: visible;
+
+        &:after{
+          font-size: 1rem;
+          font-weight: normal;
+          text-decoration: underline;
+        }
+      }
+      .fc-icon-left-single-arrow:after{
+        content:"← Prev";
+      }
+      .fc-icon-right-single-arrow:after{
+        content:"Next →";
+      }
+    }
+  }
+  .fc-body .fc-row{
+    min-height: 2rem;
+  }
+
+  .fc-row {
+    height: inherit !important;
+  }
+  td, th{
+    border-color: $color-gray-background;
+    border-width: 2px;
+  }
+  .fc-day-header{
+    text-align: left;
+    font-weight: normal;
+    color: $color-gray-dark;
+    font-size: .875rem;
+    padding-bottom: .25rem;
+  }
+  .fc-day{
+    background-color: $color-white;
+    &.fc-today{
+      background-color: $color-gray;
+    }
+  }
+  .fc-past, .fc-state-disabled{
+    opacity: .4;
+  }
+  .fc-day-number{
+    padding: 5px;
+    text-align: left;
+    font-weight: bold;
+  }
+
+  .fc-event{
+    background: transparent;
+    border: none;
+    color: black;
+    @include desktop {
+      font-size: 12px;
+    }
+
+    &:hover {
+      .fc-content {
+        overflow: visible;
+        max-height: inherit;
+        z-index: 10;
+      }
+    }
+  }
+  .calendar-classes{
+    &:hover, .fc-time{
+      color: $color-red;
+    }
+  }
+  .calendar-youthPrograms{
+    &:hover, .fc-time{
+      color: $color-green;
+    }
+  }
+  .calendar-events{
+    &:hover, .fc-time{
+      color: $color-blue;
+    }
+  }
+  .calendar-alerts{
+    cursor: default;
+    background-color: $color-black;
+    color: $color-gray;
+    border-radius: 0;
+  }
+  .fc-day-grid-event{
+    margin-bottom: 5px;
+    .fc-content{
+      max-height: 35px;
+      @include desktop {
+        max-height: 30px;
+      }
+      white-space: initial;
+    }
+  }
+}

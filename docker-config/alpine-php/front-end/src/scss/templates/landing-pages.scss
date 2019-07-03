@@ -1,0 +1,19 @@
+.featured-thumb--featured-image {
+  @include round-image(25vw);
+  margin-bottom: 1rem;
+
+  @include tablet {
+    @include round-image(55vw);
+  }
+
+  @include mobile {
+    @include round-image(92vw);
+  }
+}
+
+.landing-page--text {
+  @include paper;
+  width: 85%;
+}
+
+

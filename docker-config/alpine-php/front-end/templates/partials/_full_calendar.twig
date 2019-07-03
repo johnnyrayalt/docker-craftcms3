@@ -1,0 +1,169 @@
+{# Acquire URL segments #}
+{% set baseUrlSegments = 1 %}
+{% set segment1 = craft.request.segment(baseUrlSegments + 1) %}
+{% set segment2 = craft.request.segment(baseUrlSegments + 2) %}
+{% set segment3 = craft.request.segment(baseUrlSegments + 3) %}
+{% set segment4 = craft.request.segment(baseUrlSegments + 4) %}
+{% set segment5 = craft.request.segment(baseUrlSegments + 5) %}
+
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+
+            <div id="calendar-wrapper"></div>
+
+        </div>
+
+    </div>
+
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.7.3/fullcalendar.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+
+  {% block footerJs %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.7.3/fullcalendar.min.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.min.js"></script>
+    <!-- <script src="//cdn.jsdelivr.net/qtip2/3.0.3/jquery.qtip.min.js"></script> -->
+
+    <script>
+        window.csrfTokenName = "{{ craft.config.csrfTokenName|e('js') }}";
+        window.csrfTokenValue = "{{ craft.request.csrfToken|e('js') }}";
+        var calendarTimeFormat = "{{ craft.i18n.timepickerJsFormat }}";
+        var qTipsEnabled = true;
+        var $calendar = $("#calendar-wrapper");
+
+        {% if currentUser and currentUser.can('calendar-manageEvents') %}
+            var canEditEvents = true;
+        {% else %}
+            var canEditEvents = false;
+        {% endif %}
+
+        {% set defaultDate = now|date("Y-m-d") %}
+        {% if segment3 and segment4 and segment5 %}
+            {% set defaultDate = segment3 ~ "-" ~ segment4 ~ "-" ~ segment5 %}
+        {% endif %}
+
+        $(function () {
+            $calendar.fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                defaultDate: "{{ defaultDate }}",
+                defaultView: "month",
+                fixedWeekCount: true,
+                eventLimit: 5,
+                aspectRatio: 1.5,
+                events: getEvents,
+                eventRender: renderEvent,
+                eventClick: eventClick
+            });
+
+
+            $('.fc-button', $calendar).on({
+                click: function () {
+                    var viewType = $calendar.fullCalendar('getView').type;
+                    var date = $calendar.fullCalendar('getDate');
+
+                    var year = date.format('YYYY');
+                    var month = date.format('MM');
+                    var day = date.format('DD');
+
+                    var view = 'month';
+                    switch (viewType) {
+                        case 'agendaDay':
+                            view = 'day';
+                            break;
+
+                        case 'agendaWeek':
+                            view = 'week';
+                            break;
+                    }
+
+                    // var url = '/' + view + '/' + year + '/' + month + '/' + day;
+                    //
+                    // history.pushState('data', '', url);
+                }
+            });
+
+            // $(".date-picker").datepicker({dateFormat: "yy-mm-dd"});
+            // $(".time-picker").timepicker();
+
+            var $creator = $('#event-creator');
+            var $allDay = $('input[name=allDay]', $creator);
+            $allDay.on({
+                click: function () {
+                    var $timeWrapper = $('.timewrapper', $creator);
+
+                    if ($(this).is(":checked")) {
+                        $timeWrapper.fadeOut('fast');
+                    } else {
+                        $timeWrapper.fadeIn('fast');
+                    }
+                }
+            });
+        });
+
+        function getEvents(start, end, timezone, callback) {
+            var data = {
+                dateRangeStart: start.toISOString(),
+                dateRangeEnd: end.toISOString()
+            };
+
+            data[csrfTokenName] = csrfTokenValue;
+
+            $.ajax({
+                url: '/calendar/event.json',
+                data: data,
+                type: 'post',
+                dataType: 'json',
+                success: function (eventList) {
+                    callback(eventList);
+                }
+            });
+        }
+
+        function renderEvent(event, element) {
+            if (event.allDay) {
+                element.addClass('fc-event-all-day');
+            }
+
+            if (event.multiDay) {
+                element.addClass('fc-event-multi-day');
+            }
+
+            if (!event.end) {
+                return;
+            }
+
+            if (!event.multiDay && !event.allDay) {
+                element.addClass('fc-event-single-day');
+                var colorIcon = $('<span />')
+                        .css('background-color', event.backgroundColor)
+                        .css('border-color', event.borderColor);
+                $('.fc-content', element).prepend(colorIcon);
+            } else {
+                element.addClass('fc-event-multi-day');
+            }
+
+            element.addClass('calendar-' + event.calendar);
+        }
+
+        function eventClick(event) {
+
+          console.log(event);
+
+          // window.location.href = '{{ siteUrl }}calendar/' + event.id + '/' + year + '/' + month + '/' + day;
+        }
+
+        function createDateAsUTC(date) {
+            return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+        }
+
+    </script>
+
+{% endblock %}

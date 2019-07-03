@@ -1,0 +1,5 @@
+{% if entry.externalRedirect %}
+  {% redirect entry.externalRedirect 303 %}
+{% elseif entry.destinationPage | length %}
+  {% redirect entry.destinationPage.first.url 303 %}
+{% endif %}

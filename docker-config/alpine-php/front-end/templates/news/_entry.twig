@@ -1,0 +1,46 @@
+{% extends "_layout" %}
+
+{% set seoTitle = entry.title %}
+{% set seoDescription = entry.teaser %}
+{% if entry.featuredImage | length %}
+{% set seoImage = entry.featuredImage[0].url %}
+{% endif %}
+
+{% block content %}
+  <section>
+    <article class="news-single text">
+
+      <h1 class="news-single--title">{{ entry.title }}</h1>
+      <p class="news-single--date">{{ entry.postDate.format('F d, Y') }}</p>
+      <div class="news-categories news-single--news-categories">
+        {% nav category in craft.categories.group('category').relatedTo(entry).id('not 47') %}
+          <a href="{{ category.url }}">
+            <li>{{ category.title }}</li>
+          </a>
+        {% endnav %}
+      </div>
+
+      {% set image = entry.featuredImage.first %}
+      {% if image | length %}
+        <figure class="news-single--featured-image">
+          <img src="{{ image.getUrl()}}">
+          {% if image.imageCaption | length %}
+            <figcaption class="featured-image-caption">{{ image.imageCaption }}</figcaption>
+          {% endif %}
+        </figure>
+      {% endif %}
+
+      {% set author = entry.instructor.first %}
+      {% if author | length %}
+        <span class="news-single--byline">Posted by {{ author.title }}</span>
+      {% endif %}
+
+      <div class="news-single--body text">{{ entry.body }}</div>
+
+      {% if author | length %}
+        {% include 'partials/_person' with { person: author } %}
+      {% endif %}
+      <a href="/news" class="news-single--back-link">← Return to index</a>
+    </article>
+  </section>
+{% endblock %}

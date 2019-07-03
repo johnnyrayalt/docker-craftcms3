@@ -1,0 +1,18 @@
+{% extends "_layout" %}
+
+{% set seoTitle = entry.title %}
+{% set seoDescription = entry.description %}
+
+{% block content %}
+  <header class="section-header">
+    <h1 class="section-header--title">{{ entry.title }}</h1>
+  </header>
+
+  {% include 'partials/_introduction' with { entry: entry } only %}
+
+  {% if entry.body | length %}
+    <article class="text single">
+      {{ entry.body }}
+    </article>
+  {% endif %}
+{% endblock %}

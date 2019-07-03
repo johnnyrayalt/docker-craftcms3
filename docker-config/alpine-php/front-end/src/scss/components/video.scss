@@ -1,0 +1,125 @@
+.video-embed {
+  display: inline-block;
+  font-size: 1rem;
+  height: 0;
+  overflow: hidden;
+  padding-bottom: 40%;
+  position: relative;
+  vertical-align: top;
+  width: 70%;
+
+  @include tablet {
+    width: 100%;
+    padding-bottom: 57%;
+  }
+
+  iframe {
+    height: 27vw;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+
+    @include tablet {
+      height: 55vw;
+    }
+  }
+}
+
+.featured-video--info {
+  background: $color-white;
+  display: inline-block;
+  font-size: $type-size-base;
+  margin-left: 1rem;
+  padding: 1rem;
+  vertical-align: top;
+  width: 27%;
+
+  @include tablet {
+    margin: 2rem 0;
+    width: 100%;
+  }
+}
+
+.featured-video--title {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 1rem;
+
+  @include mobile {
+    font-size: 1.25rem;
+  }
+}
+
+.featured-video--description {
+  display: block;
+  font-size: $type-size-base;
+  line-height: $type-leading-base;
+}
+
+
+.video-strip--container {
+  font-size: 0;
+  margin-top: 4rem;
+
+  @include tablet {
+    margin-top: 1rem;
+  }
+}
+
+.video-strip--video {
+  display: inline-block;
+  font-size: $type-size-small;
+  vertical-align: top;
+}
+
+.video-grid--thumbnail {
+  display: inline-block;
+  font-size: $type-size-base;
+  padding: 0 2rem 2rem 0;
+  text-decoration: none;
+  vertical-align: top;
+  width: 32%;
+
+  &::after {
+    display: none;
+  }
+
+  @include tablet {
+    width: 49%;
+  }
+
+  @include mobile {
+    width: 80%;
+  }
+}
+
+.video-grid--thumbnail-image {
+  height: 12vw;
+  object-fit: cover;
+  width: 20vw;
+
+  @include tablet {
+    height: 22vw;
+    width: 40vw;
+  }
+
+  @include mobile {
+    height: 39vw;
+    width: 70vw;
+  }
+}
+
+
+.video-grid--thumbnail-title {
+  display: block;
+  font-weight: bold;
+  line-height: $type-leading-base;
+  margin: 1rem 0 .5rem;
+}
+
+.video-grid--thumbnail-description {
+  font-size: $type-size-small;
+  line-height: $type-leading-small;
+  margin-top: 1rem;
+}

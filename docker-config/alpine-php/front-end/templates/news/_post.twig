@@ -1,0 +1,18 @@
+<a href="{{ entry.url }}" class="news-thumb--link">
+  <article class="news-thumb">
+    {% if entry.featuredImage | length %}
+      <div class="news-thumb--featured-image">
+        <img src="{{ entry.featuredImage.first.getUrl('circle')}}">
+      </div>
+    {% else %}
+      <div class="news-thumb--featured-image">
+        <img src="assets/images/round-placeholder.svg">
+      </div>
+    {% endif %}
+
+    <header class="news-thumb--paper-overlay paper-overlay">
+      {{ entry.title }}
+    </header>
+
+  </article>
+</a>

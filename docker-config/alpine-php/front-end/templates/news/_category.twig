@@ -1,0 +1,49 @@
+{% extends "_layout" %}
+{% set seoTitle = "News" %}
+
+{% block content %}
+  <section>
+    <header class="section-header">
+      <h1 class="section-header--title">News</h1>
+      <h2 class="news--category-header"><span class="grey">Category:</span> {{ category }}</h2>
+    </header>
+
+    <div class="news-categories">
+      <ul>
+        {% nav category in craft.categories.group('category').id('not 47') %}
+          <li>{{ category.getLink }}</li>
+        {% endnav %}
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <article>
+      {% paginate craft.entries.section('news').relatedTo(category).limit(10) as pageInfo, news %}
+      {% for entry in news %}
+        <article class="news-post">
+          {% if entry.featuredImage | length %}
+            <div class="news-post--featured-image">
+              <a href="{{ entry.url }}">
+                <img src="{{ entry.featuredImage.first.getUrl('circle')}}"
+                  alt="{{ entry.title }}">
+              </a>
+            </div>
+          {% endif %}
+
+          <div class="news-post--preview">
+            <h2 class="news-post--title"><a href="{{ entry.url }}">{{ entry.title }}</a></h2>
+            <div class="news-post--teaser">{{ entry.teaser }}</div>
+            <div class="button"><a href="{{ entry.url }}">Read more</a></div>
+          </div>
+        </article>
+      {% endfor %}
+
+      <div class="pagination">
+        {% if pageInfo.prevUrl %}<a href="{{ pageInfo.prevUrl }}"" class="pagination-prev">Previous Page</a>{% endif %}
+        {% if pageInfo.nextUrl %}<a href="{{ pageInfo.nextUrl }}"" class="pagination-next">Next Page</a>{% endif %}
+      </div>
+    </article>
+  </section>
+
+{% endblock %}

@@ -1,0 +1,15 @@
+<article class="person">
+  <div class="person-image">
+    {% if person.personHeadshot | length %}
+      <img src="{{ person.personHeadshot.first.getUrl('circle') }}">
+    {% endif %}
+  </div>
+
+  <span class="person-name">{{ person.title }}</span>
+  <span class="person-title">{{ person.personTitle }}</span>
+  <span class="person-email">{{ person.personEmail }}</span>
+
+  <a href="tel:{{ person.personPhoneNumber }}" class="person-phone-number">{{ person.personPhoneNumber }}</a>
+
+  <div class="person-bio">{{ person.personBio }}</div>
+</article>

@@ -1,0 +1,59 @@
+{% extends '_layout' %}
+
+{% set seoTitle = "Search" %}
+
+{% set body_classes = ['search'] %}
+
+{% set terms = craft.request.getParam('terms') %}
+{% set results = craft.entries({
+  section: ['singles', 'pages'],
+  search: { query: terms }
+}) %}
+
+{% set news_results = craft.entries({
+  section: ['news'],
+  search: { query: terms }
+}) %}
+
+{% block content %}
+<section>
+  <header class="section-header">
+    <h1 class="section-header--title">Search</h1>
+  </header>
+
+  <section class="search-form search-results--form">
+    <form class="search" action="/search" autocomplete="off">
+      <input type="search" name="terms" class="search-field search-results--search-field" placeholder="Search" value="{{ craft.request.getParam('terms') }}">
+    </form>
+  </section>
+
+  <h2>Results for “{{ craft.request.getParam('terms') }}"</h2>
+
+  {% if (results|length) or (news_results|length) %}
+    <section class="search-results">
+
+      <ul class="results pages-results">
+        {% for result in results %}
+          <li class="result {{ result.section.handle }} {{ result.type }}">
+            {{ result.getLink }}
+            {{ result.introduction }}
+          </li>
+        {% endfor %}
+      </ul>
+
+      <section class="group featured-news results news-results">
+        {% for news_result in news_results %}
+          {% include 'news/_post' with { entry: news_result } only %}
+        {% endfor %}
+      </section>
+
+    </section>
+  {% else %}
+  <section class="search-results no-results">
+    <h2 class="search-message">
+      We didn’t find anything for “{{ terms }}”
+    </h2>
+  </section>
+{% endif %}
+
+{% endblock %}

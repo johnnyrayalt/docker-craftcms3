@@ -1,0 +1,14 @@
+{% extends "freeform_demo/_layouts/layout" %}
+
+{% block nav %}
+    {% include "freeform_demo/_layouts/foundation-header.html" %}
+{% endblock %}
+
+{% block headerCss %}
+    <link href="{{ siteUrl }}assets/freeform_demo/css/main-foundation.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.2.3/foundation.min.css">
+{% endblock %}
+
+{% block footerJs %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.2.3/foundation.min.js"></script>
+{% endblock %}

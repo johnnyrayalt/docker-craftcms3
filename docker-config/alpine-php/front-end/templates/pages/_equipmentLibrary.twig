@@ -1,0 +1,35 @@
+{% include 'partials/_featured_media' with { entry: entry } only %}
+{% include 'partials/_introduction' with { entry: entry } only %}
+
+<section class="equipment-library--body text">
+  {{ entry.body }}
+</section>
+
+{% set equipment = entry.equipmentLibrary %}
+{% for group in equipment %}
+<section class="equipment-group">
+  <h2 class="equipment-group--name">{{ group.equipmentType }}</h2>
+
+  <div class="equipment-group--description">{{ group.groupDescription }}</div>
+
+  {% for item in group.equipmentItems %}
+    <article class="equipment-item">
+      <div class="equipment-item--info">
+        <span class="equipment-item--title">{{ item.title }}</span>
+        <span class="equipment-item--quantity">Quantity: {{ item.quantity }}</span>
+        <span class="equipment-item--description">{{ item.description }}</span>
+        {% if item.certification | length %}
+          <a class="equipment-item--certification" href="{{ item.certification }}" target="_blank">Get certified!</a>
+        {% endif %}
+      </div>
+
+      {% set image = item.image.first %}
+      {% if image | length %}
+        <figure class="equipment-item--image">
+          <img src="{{ image.getUrl('equipmentItem') }}" alt="{{ image.title }}" />
+        </figure>
+      {% endif %}
+    </article>
+  {% endfor %}
+</section>
+{% endfor %}

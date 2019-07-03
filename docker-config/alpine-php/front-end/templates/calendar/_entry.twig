@@ -1,0 +1,375 @@
+{% extends "_layout" %}
+{% set today = "now"|date("Y-m-d") %}
+{% set seoTitle = entry.title %}
+{% if entry.description | length %}
+  {% set seoDescription = entry.description %}
+{% endif %}
+
+{% if entry.featuredImage | length %}
+  {% set seoImage = entry.featuredImage.first() %}
+{% endif %}
+
+{% set dates = craft.calendar.events({loadOccurrences: false, dateRangeStart: today}).parentEvent(':empty:').relatedTo(entry) %}
+{% set instructors = craft.entries.section('people').relatedTo(dates) %}
+
+{% import "partials/_cost_and_capacity" as meta %}
+
+{% if dates | length %}
+  {% set cost = meta.cost(dates[0]) %}
+  {% set capacity = meta.capacity(dates[0]) %}
+{% endif %}
+
+{% if entry.calendarCategories | length %}
+  {% set parentCalendarCategory = entry.calendarCategories[0].level(1) %}
+{% endif %}
+
+{% block content %}
+
+  <article class="class-detail-page">
+
+    <section>
+      <header class="section-header">
+        <h1>{{ entry.title }}</h1>
+        {% if entry.subtitle | length %}
+          <h2>{{ entry.subtitle }}</h2>
+        {% endif %}
+        {{ entry.introduction }}
+      </header>
+
+      {% if entry.calendarCategories | length %}
+        <div class="calendar-categories">
+          <ul class="child-categories">
+            {% nav calendarCategory in entry.calendarCategories %}
+            <li class="active {{ entry.calendarCategories.first().level(1).slug }}">
+              <a href="/calendar?category={{ calendarCategory.slug }}">{{ calendarCategory.title }}</a>
+            </li>
+            {% endnav %}
+          </ul>
+        </div>
+      {% endif %}
+
+    </section>
+
+    <section id="class-details">
+
+      <div class="news-post calendar-post">
+
+        {% if entry.featuredImage | length %}
+          <div class="news-post--featured-image">
+            <img src="{{ entry.featuredImage.first.getUrl('circle')}}" alt="{{ entry.title }}">
+          </div>
+        {% endif %}
+
+        <div class="news-post--preview {% if entry.calendarCategories | length %}preview-{{ entry.calendarCategories.first().slug }}{% endif %}">
+          <ul>
+
+            {% if cost %}
+              <li>Cost:
+                <span class="bold cost">{{ cost }}</span></li>
+            {% endif %}
+            {% if entry.ages | length %}
+              <li>Ages:
+                <span class="bold">{{ entry.ages }}</span></li>
+            {% endif %}
+            {% if entry.totalHours | length %}
+              <li>Total Hours:
+                <span class="bold">{{ entry.totalHours}}</span>
+                {% if entry.totalHoursDescription | length %}
+                  <span>({{ entry.totalHoursDescription }})</span>
+                {% endif %}
+              </li>
+            {% endif %}
+            {% if capacity is defined and capacity | length %}
+              <li>Capacity:
+                <span class="bold">{{ capacity }}</span></li>
+
+            {% endif %}
+
+            {% if entry.prerequisiteClasses | length %}
+              <li>Prerequisites:
+                {% for class in entry.prerequisiteClasses %}
+                  <a href="{{ class.url }}" class="bold">{{ class.title }}</a>{{ not loop.last ? ', '}}
+                {% endfor %}
+
+                {% if entry.prerequisiteAlternativeText | length %}
+                  <span>({{ entry.prerequisiteAlternativeText }})</span>
+                {% endif %}
+
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+
+      </div>
+
+      {% if entry.description | length %}
+        <div class="callout">
+          {{ entry.description }}
+        </div>
+      {% endif %}
+
+      {% if entry.body | length %}
+        <div class="landing-page--text text">
+          {{ entry.body }}
+        </div>
+      {% endif %}
+
+      {% if entry.classCertification.level(2) | length %}
+        <div class="landing-page--text text">
+          <h2>Certification{{ entry.classCertification.level(2)  | length > 1 ? 's' }}</h2>
+          {% for certification in entry.classCertification.level(2) %}
+            <h3>{{ certification.title }}</h3>
+            {{ certification.description }}
+            {% if not loop.last %}<br>{% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if dates | length %}
+        <div class="landing-page--text text">
+          <h2>Dates</h2>
+          {% for date in dates %}
+
+            {% set dateWithAllSessions = craft.calendar.event(date.id) %}
+            {% set relatedDates = craft.calendar.events({loadOccurrences: false}).relatedTo(date.id) %}
+            {% set sessionInstructors = dateWithAllSessions.instructor %}
+            <div class="table--date">
+
+              {% include 'partials/_table-date-row' with{ showButton: true, event: dateWithAllSessions } %}
+
+              {% if relatedDates | length %}
+                {% for relatedDate in relatedDates %}
+                  {% set relatedDateWithAllSessions = craft.calendar.event(relatedDate.id) %}
+                  {% include 'partials/_table-date-row' with{ date: relatedDate, dateWithAllSessions: relatedDateWithAllSessions, showButton: false } %}
+                {% endfor %}
+              {% endif %}
+
+              {% if sessionInstructors | length %}
+                <p class="session-listing">Instructor:
+                  {% for instructor in sessionInstructors %}{{ instructor.title }}{{ not loop.last ? ', ' }}
+                  {% endfor %}
+                </p>
+              {% endif %}
+              <p class="session-listing">
+                {% if dateWithAllSessions.repeating %}
+                  {% set sessionCount = dateWithAllSessions.occurrenceCount %}
+                  {% if relatedDates | length %}
+                    {% for relatedDate in relatedDates %}
+                      {% set relatedDateWithAllSessions = craft.calendar.event(relatedDate.id) %}
+                      {% if relatedDateWithAllSessions.repeating %}
+                        {% set sessionCount = sessionCount + relatedDateWithAllSessions.occurrenceCount %}
+                      {% else %}
+                        {% set sessionCount = sessionCount + 1 %}
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
+                  {{ sessionCount }}
+                  SESSIONS:
+                  {% for occurrence in dateWithAllSessions.occurrences %}
+                    {{ occurrence.startDate.format("n/j")}}{{ not loop.last or relatedDates | length ? ', '}}
+                  {% endfor %}
+                  {% if relatedDates | length %}
+                    {% for relatedDate in relatedDates %}
+                      {% set relatedDateWithAllSessions = craft.calendar.event(relatedDate.id) %}
+                      {% if relatedDateWithAllSessions.repeating %}
+                        {% for occurrence in relatedDateWithAllSessions.occurrences %}
+                          {{ occurrence.startDate.format("n/j")}}{{ not loop.last or not (relatedDate.id == relatedDates[relatedDates | length - 1].id) ? ', '}}
+                        {% endfor %}
+                      {% else %}
+                        {{ relatedDateWithAllSessions.startDate.format("n/j") }}{{ not loop.last or not (relatedDate.id == relatedDates[relatedDates | length - 1].id) ? ', '}}
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
+                {% else %}
+                  1 SESSION:
+                  {{ dateWithAllSessions.startDate.format("n/j")}}
+                {% endif %}
+              </p>
+            </div>
+
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if entry.location | length %}
+        {% set location = entry.location[0] %}
+        {% set address = location.address %}
+        <div class="landing-page--text text">
+          <div class="location-wrapper">
+            <div class="location-info">
+              <h2>Location</h2>
+              <h3>{{ location.title }}</h3>
+              <address>
+                {{ address.street1 }}<br/>
+                {% if address.street2 | length %}
+                  {{ address.street2 }}<br/>
+                {% endif %}
+                {{ address.city }},
+                {{ address.state }}
+                {{ address.zip }}
+              </address>
+              <a href="https://www.google.com/maps?saddr=My+Location&daddr={{ address.lat }},{{ address.lng }}" target="_blank" class="directions-link">Get Directions</a>
+            </div>
+
+            <div class="location-map">
+              {% set mapOptions = {
+              height: 220,
+              zoom: 16,
+              draggable: false,
+              disableDefaultUI: true,
+              markerOptions: {
+                  icon: '/assets/images/red-dot.png',
+                  label: ''
+              }
+          } %}
+
+              {{ craft.smartMap.map(address, mapOptions) }}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+    </section>
+
+    {% if instructors | length %}
+      <section id="instructor">
+        <h2>{{ entry.relatedPeopleHeading.label }}{{ instructors | length > 1 ? 's' }}</h2>
+        {% for instructor in instructors %}
+          {% include 'partials/_person' with {
+            person : instructor
+          } %}
+        {% endfor %}
+      </section>
+    {% endif %}
+
+    {% if entry.featuredVideo | length %}
+      {% set video = entry.featuredVideo[0] %}
+      {% if (video.featuredVideoUrl | length) 
+        or(video.videoStrip | length) %}
+        <section class="group homepage-video">
+          <h2>Featured Work</h2>
+          {% switch video.displayView %}
+          {% case "featuredVideoAndVideoStrip" %}
+            <div class="homepage-video--with-strip">
+              {% include 'partials/_video_featured' with {
+                video : video.featuredVideoUrl.first
+              }
+              only %}
+              {% include 'partials/_video_strip' with {
+                videos : video.videoStrip
+              }
+              only %}
+            </div>
+            {% case "videoStrip" %}
+              <div class="homepage-video--video-strip">
+                {% include 'partials/_video_strip' with {
+                  videos : video.videoStrip
+                }
+                only %}
+              </div>
+              {% default %}
+              <div class="homepage-video--featured-video">
+                {% include 'partials/_video_featured' with {
+                  video : video.featuredVideoUrl.first
+                }
+                only %}
+              </div>
+              {% endswitch %}
+            </section>
+          {% endif %}
+        {% endif %}
+
+        <section id="testimonials">
+          {% if entry.classTestimonial | length %}
+            {% for testimonial in entry.classTestimonial %}
+              {% include 'partials/_testimonial' %}
+            {% endfor %}
+          {% endif %}
+        </section>
+
+        <div class="landing-page--text text policies">
+          <h2>Policies</h2>
+          {% if parentCalendarCategory is defined and parentCalendarCategory.policyFaqs | length %}
+            {{ parentCalendarCategory.policyFaqs }}
+          {% else %}
+            {{ policies.policyFaqs }}
+          {% endif %}
+        </div>
+
+        {% if entry.haveMoreQuestions | length %}
+
+          <div class="pages">
+            <section class="collapsible text">
+              <div class="collapsible--subheader">
+                <button class="collapsible-button" aria-expanded="false" aria-controls="collapsible-more-questions">
+                  Have More Questions?
+                </button>
+              </div>
+              <div class="collapsible--description" id="collapsible-more-questions" aria-hidden="true">
+                {{ entry.haveMoreQuestions }}
+              </div>
+            </section>
+          </div>
+        {% endif %}
+
+        {% set eventCategories = entry.calendarCategories.level(2) %}
+        {% set relatedClasses = craft.entries.section('courses').relatedTo(eventCategories).id('not ' ~ entry.id).limit(3) %}
+        {% set relatedEvents = craft.calendar.events({calendar: "events", loadOccurrences: false}).relatedTo(eventCategories) %}
+
+        {% if relatedClasses | length or relatedEvents | length %}
+          <section id="related-events">
+
+            <h2>Related Classes and Events</h2>
+
+            {% if relatedClasses | length %}
+              {% for class in relatedClasses %}
+                <a href="{{ class.url }}" class="news-thumb--link related-event link-{{ class.calendarCategories.first().slug }}">
+                  <article class="news-thumb">
+                    {% if class.featuredImage | length %}
+                      <div class="news-thumb--featured-image">
+                        <img src="{{ class.featuredImage.first.getUrl('circle')}}">
+                      </div>
+                    {% else %}
+                      <div class="news-thumb--featured-image">
+                        <img src="assets/images/round-placeholder.svg">
+                      </div>
+                    {% endif %}
+
+                    <header class="news-thumb--paper-overlay paper-overlay">
+                      {{ class.title }}
+                    </header>
+
+                  </article>
+                </a>
+              {% endfor %}
+            {% endif %}
+
+            {% if relatedClasses | length < 3 and relatedEvents | length %}
+              {% for event in relatedEvents %}
+                <a href="calendar/{{ event.id }}" class="news-thumb--link related-event link-{{ class.calendarCategories.first().slug }}">
+                  <article class="news-thumb">
+                    {% if event.featuredImage | length %}
+                      <div class="news-thumb--featured-image">
+                        <img src="{{ event.featuredImage.first.getUrl('circle')}}">
+                      </div>
+                    {% else %}
+                      <div class="news-thumb--featured-image">
+                        <img src="assets/images/round-placeholder.svg">
+                      </div>
+                    {% endif %}
+
+                    <header class="news-thumb--paper-overlay paper-overlay">
+                      {{ event.title }}
+                    </header>
+
+                  </article>
+                </a>
+              {% endfor %}
+            {% endif %}
+
+          </section>
+
+        {% endif %}
+      </article>
+
+    {% endblock %}

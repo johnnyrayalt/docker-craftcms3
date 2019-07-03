@@ -1,0 +1,78 @@
+.equipment-library--body {
+  @include paper;
+  margin: 1rem 0;
+  position: relative;
+  width: 85%;
+
+  @include tablet {
+    width: 100%;
+  }
+}
+
+.equipment-group {
+  @include paper;
+  width: 85%;
+
+  @include tablet {
+    width: 100%;
+  }
+}
+
+.equipment-group--name {
+  margin: 1rem 0;
+}
+
+.equipment-group--description {
+  margin: 0 0 2rem;
+}
+
+.equipment-item {
+  margin: 2rem 0;
+  position: relative;
+}
+
+.equipment-item--info {
+  display: inline-block;
+  width: 70%;
+}
+
+.equipment-item--title {
+  font-weight: bold;
+}
+
+.equipment-item--quantity {
+  color: $color-gray-dark;
+  display: block;
+  font-size: $type-size-small;
+  margin: .5rem 0 1rem;
+}
+
+.equipment-item--description {
+  display: inline-block;
+  font-size: $type-size-small;
+  line-height: $type-leading-small;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.equipment-item--certification {
+  @include rollover;
+  color: $color-gray-dark;
+  display: inline-block;
+
+  &::after {
+    text-decoration: none;
+  }
+}
+
+.equipment-item--image {
+  display: inline-block;
+  padding-left: 3rem;
+  vertical-align: top;
+  width: 20%;
+
+  @include tablet {
+    padding-left: 1rem;
+    width: 25%;
+  }
+}

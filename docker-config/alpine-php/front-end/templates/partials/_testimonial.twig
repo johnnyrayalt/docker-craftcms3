@@ -1,0 +1,28 @@
+
+
+<a class="testimonial-thumb--link" href="{% for button in testimonial.testimonialButton %}{% if (button.buttonLink | length) and (button.buttonText | length) %}{% switch button.type %}{% case "buttonInternal" %}{{ button.buttonLink.first.getUrl() }}{% case "buttonExternal" %}{{ button.buttonLink }}{% endswitch %}{% endif %}{% endfor %}">
+  <article class="testimonial testimonial-thumb">
+    {% set image = testimonial.testimonialImage.first %}
+    {% if image | length %}
+      <img class="testimonial-thumb--featured-image" src="{{ image.getUrl('testimonial') }}">
+    {% endif %}
+
+    <div class="testimonial-thumb--paper-overlay">
+      {{ testimonial.testimonialBlurb }}
+      <div class="testimonial-thumb--byline">{{ testimonial.testimonialName }}, {{ testimonial.testimonialOrganization }}</div>
+    </div>
+
+    {% for button in testimonial.testimonialButton %}
+      {% if (button.buttonLink | length) and (button.buttonText | length) %}
+        <div class="testimonial-thumb--button button">
+          {% switch button.type %}
+            {% case "buttonInternal" %}
+              <a href="{{ button.buttonLink.first.getUrl() }}">{{ button.buttonText }}</a>
+            {% case "buttonExternal" %}
+              <a href="{{ button.buttonLink }}" target="_blank">{{ button.buttonText }}</a>
+          {% endswitch %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </article>
+</a>

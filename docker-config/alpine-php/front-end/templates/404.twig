@@ -1,0 +1,12 @@
+{% extends "_layout" %}
+{% set title = "404" %}
+
+{% block content %}
+  <div class="callout error">
+    <h1 class="oops">Oops. We can't find that.</h1>
+
+    {% if errorPage | length %}
+      {{ errorPage.body }}
+    {% endif %}
+  </div>
+{% endblock %}

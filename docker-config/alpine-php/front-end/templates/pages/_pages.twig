@@ -1,0 +1,85 @@
+{% include 'partials/_featured_media' with { entry: entry } only %}
+{% include 'partials/_introduction' with { entry: entry } only %}
+
+<section class="rich-matrix">
+  {% for block in entry.richMatrix %}
+    {% if block.type == "video" %}
+      <div class="rich-matrix--video video">
+        <h2>{{ block.heading }}</h2>
+        {% include 'partials/_video-embed' with {'video' : block.video.first() } %}
+      </div>
+    {% endif %}
+
+    {% if block.type == "text" %}
+      <section class="rich-matrix--text">
+        {% set image = block.featuredImage.first() %}
+        {% if image | length %}
+          <figure class="rich-matrix--featured-image"><img src="{{ image.getUrl('featuredImage') }}"></figure>
+        {% endif %}
+
+        <div class="rich-matrix--text-block text">
+          <h3>{{ block.header }}</h3>
+          {{ block.text }}
+        </div>
+      </section>
+    {% endif %}
+
+    {% if block.type == "news" %}
+      <section class="rich-matrix--news featured-news news">
+        <h2>{{ block.heading }}</h2>
+        {% set entries = block.entries %}
+        {% for entry in entries %}
+          {% include 'news/_post' %}
+        {% endfor %}
+      </section>
+    {% endif %}
+
+    {% if block.type == "testimonial" %}
+      <section class="rich-matrix--testimonial testimonial">
+        {% set testimonial = block.entries.first() %}
+        {% for testimonial in block.entries %}
+          {% include 'partials/_testimonial' %}
+        {% endfor %}
+      </section>
+    {% endif %}
+
+    {% if block.type == "images" %}
+      <section class="rich-matrix rich-matrix--images images">
+        {% for image in block.images %}
+          <figure class="inline-image">
+            <a href="{{ url('images/' ~ image.id)}}" rel="modal:open">
+              <img src="{{ image.getUrl('circle') }}" />
+
+              {% if image.imageCaption | length %}
+                <figcaption class="inline-image--caption">
+                  {{ image.imageCaption }}
+                </figcaption>
+              {% endif %}
+            </a>
+          </figure>
+        {% endfor %}
+      </section>
+    {% endif %}
+
+    {% if block.type == "collapsibleText" %}
+      <section class="collapsible text">
+        <div class="collapsible--subheader">
+          <button class="collapsible-button" aria-expanded="false" aria-controls="collapsible-{{ loop.index }}">
+            {{ block.header | smartypants }}
+          </button>
+        </div>
+        <div class="collapsible--description" id="collapsible-{{ loop.index }}" aria-hidden="true">
+          {{ block.description }}
+        </div>
+      </section>
+    {% endif %}
+
+    {% if block.type == "featuredEventCategory" %}
+      {% include 'partials/_related-events' %}
+    {% endif %}
+
+    {% if block.type == "featuredEvents" %}
+      {% include 'partials/_related-events' %}
+    {% endif %}
+  {% endfor %}
+</section>

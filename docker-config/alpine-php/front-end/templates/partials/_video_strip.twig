@@ -1,0 +1,16 @@
+{#
+ # Video strip
+ # ---------------
+ # Requires variable `videos`
+ #
+#}
+
+<div class="video-strip--container">
+  {% for video in videos %}
+    <a href="{{ craft.embeddedAssets.fromAsset(video).url }}" target="_blank" class="video-strip--video video-grid--thumbnail">
+      <img src="{{ craft.embeddedAssets.fromAsset(video).thumbnailUrl }}" class="video-grid--thumbnail-image" />
+      <span class="video-grid--thumbnail-title">{{ video.title }}</span>
+      <span class="video-grid--thumbnail-description">{{ video.body }}</span>
+    </a>
+  {% endfor %}
+</div>

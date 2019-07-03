@@ -1,0 +1,24 @@
+{% set entry = craft.entries.section('donationThankYouEmail').first() %}
+
+
+{% block content %}
+
+{% if charge is defined %}
+<section class="donate-thank-you--summary text">
+  <h1>Thanks for donating!</h1>
+  <div class="donate-thank-you--text">Here's a summary of your donation:</div>
+  <div class="donate-thank-you--line-item"><strong>Donation amount:</strong> {{ charge.formatPlanAmount }}{% if charge.planInterval == 'month' %} monthly{% elseif charge.planInterval == 'year' %} yearly{% endif %}</div>
+  <div class="donate-thank-you--line-item"><strong>From:</strong> {{ charge.customer.name }}</div>
+  <div class="donate-thank-you--line-item"><strong>Email:</strong> {{ charge.customer.email }}</div>
+  <div class="donate-thank-you--line-item"><strong>Date:</strong> {{ charge.timestamp|date(" M d, Y") }}</div>
+  {% if charge.meta.comment | length %}
+  <div class="donate-thank-you--line-item"><strong>Comment:</strong> {{ charge.meta.comment }}</div>
+  {% endif %}
+  {% if charge.meta.waiveBenefits == 'yes' %}
+  <div class="donate-thank-you--line-item"><strong>Waive benefits:</strong> yes</div>
+  {% endif %}
+  <div class="donate-thank-you--body">{{ entry.body }}</div>
+</section>
+{% endif %}
+
+{% endblock %}

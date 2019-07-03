@@ -1,0 +1,268 @@
+{% extends "_layout" %}
+{% set event = craft.calendar.event(craft.request.getLastSegment()) %}
+{% set seoTitle = event.title %}
+{% if event.description | length %}
+  {% set seoDescription = event.description %}
+{% endif %}
+
+{% if event.featuredImage | length %}
+  {% set seoImage = event.featuredImage.first() %}
+{% endif %}
+{#
+{% set dates = craft.calendar.event(craft.request.getLastSegment(), { loadOccurrences: false }) %}
+#}
+
+{% import "partials/_cost_and_capacity" as meta %}
+{% set cost = meta.cost(event) %}
+{% set capacity = meta.capacity(event) %}
+
+{% if event.calendarCategories | length %}
+  {% set parentCalendarCategory = event.calendarCategories[0].level(1) %}
+{% endif %}
+
+{% block content %}
+
+{% cache %}
+
+<section>
+  <header class="section-header">
+    <h1>{{ event.title }}</h1>
+    {% if event.subtitle | length %}
+    <h2>{{ event.subtitle }}</h2>
+    {% endif %}
+  </header>
+
+  {% if event.calendarCategories | length %}
+  <div class="calendar-categories">
+    <ul class="child-categories">
+      {% nav calendarCategory in event.calendarCategories %}
+        <li class="active {{ event.calendarCategories.first().level(1).slug }}"><a href="/calendar?category={{ calendarCategory.slug }}">{{ calendarCategory.title }}</a></li>
+      {% endnav %}
+    </ul>
+  </div>
+  {% endif %}
+
+</section>
+
+<section id="class-details">
+
+  <div class="news-post calendar-post">
+
+      {% if event.featuredImage | length %}
+      <div class="news-post--featured-image">
+        <img src="{{ event.featuredImage.first.getUrl('circle')}}"
+          alt="{{ event.title }}">
+      </div>
+      {% endif %}
+
+      {% if cost | length or event.ages | length or (capacity is defined and capacity | length) %}
+      <div class="news-post--preview {% if event.calendarCategories | length %}preview-{{ event.calendarCategories.first().slug }}{% endif %}">
+        <ul>
+
+          {% if cost %}
+          <li>Cost: <span class="bold cost">{{ cost }}</span></li>
+          {% endif %}
+          {% if event.ages | length %}
+          <li>Ages: <span class="bold">{{ event.ages }}</span></li>
+          {% endif %}
+          {% if capacity is defined and capacity| length %}
+          <li>Capacity: <span class="bold">{{ capacity }}</span></li>
+          {% endif %}
+        </ul>
+      </div>
+      {% endif %}
+  </div>
+
+  {% if event.description | length %}
+  <div class="callout">
+    {{ event.description }}
+  </div>
+  {% endif %}
+
+  {% if event.body | length %}
+  <div class="landing-page--text text">
+    {{ event.body }}
+  </div>
+  {% endif %}
+
+  <div class="landing-page--text text">
+    <h2>Dates</h2>
+
+      {% set dateWithAllSessions = event %}
+      {% set relatedDates = craft.calendar.events({ loadOccurrences: false }).relatedTo(event) %}
+      <div class="table--date">
+
+        {% include 'partials/_table-date-row' with{ date: event, showButton: true } %}
+
+        {% if relatedDates | length %}
+          {% for relatedDate in relatedDates %}
+            {% set relatedDateWithAllSessions = craft.calendar.event(relatedDate.id) %}
+            {% include 'partials/_table-date-row' with{ date: relatedDate, dateWithAllSessions: relatedDateWithAllSessions, showButton: false } %}
+          {% endfor %}
+        {% endif %}
+
+      </div>
+
+  </div>
+
+{% endcache %} {# the smartMap won't render if it's inside a cache tag #}
+
+  {% if event.location | length %}
+  {% set location = event.location[0] %}
+  {% set address = location.address %}
+  <div class="landing-page--text text">
+    <div class="location-wrapper">
+      <div class="location-info">
+        <h2>Location</h2>
+        <h3>{{ location.title }}</h3>
+        <address>
+          {{ address.street1 }}<br />
+          {% if address.street2 | length %}
+          {{ address.street2 }}<br />
+          {% endif %}
+          {{ address.city }}, {{ address.state }} {{ address.zip }}
+        </address>
+        <a href="https://www.google.com/maps?saddr=My+Location&daddr={{ address.lat }},{{ address.lng }}" target="_blank" class="directions-link">Get Directions</a>
+      </div>
+
+      <div class="location-map">
+        {% set mapOptions = {
+            height: 220,
+            zoom: 16,
+            draggable: false,
+            disableDefaultUI: true,
+            markerOptions: {
+                icon: '/assets/images/red-dot.png',
+                label: ''
+            }
+        } %}
+
+        {{ craft.smartMap.map(address, mapOptions) }}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+{% cache %}
+
+</section>
+
+{% if event.instructor | length %}
+<section id="instructor">
+  <h2>{{ event.relatedPeopleHeading.label }}{{ event.instructor | length > 1 ? 's' }}</h2>
+  {% for instructor in event.instructor %}
+  {% include 'partials/_person' with{ person: instructor } %}
+  {% endfor %}
+</section>
+{% endif %}
+
+{% if event.featuredVideo | length %}
+  {% set video = event.featuredVideo[0] %}
+  {% if (video.featuredVideoUrl | length) or (video.videoStrip | length) %}
+  <section class="group homepage-video">
+    <h2>Featured Work</h2>
+    {% switch video.displayView %}
+      {% case "featuredVideoAndVideoStrip" %}
+        <div class="homepage-video--with-strip">
+          {% include 'partials/_video_featured' with { video: video.featuredVideoUrl.first } only %}
+          {% include 'partials/_video_strip' with { videos: video.videoStrip } only %}
+        </div>
+      {% case "videoStrip" %}
+        <div class="homepage-video--video-strip">
+          {% include 'partials/_video_strip' with { videos: video.videoStrip } only %}
+        </div>
+      {% default %}
+        <div class="homepage-video--featured-video">
+          {% include 'partials/_video_featured' with { video: video.featuredVideoUrl.first } only %}
+        </div>
+    {% endswitch %}
+  </section>
+  {% endif %}
+{% endif %}
+
+<div class="landing-page--text text policies">
+  <h2>Policies</h2>
+  {% if parentCalendarCategory is defined and parentCalendarCategory.policyFaqs | length %}
+    {{ parentCalendarCategory.policyFaqs }}
+  {% else %}
+    {{ policies.policyFaqs }}
+  {% endif %}
+</div>
+
+{% if event.haveMoreQuestions | length %}
+
+<div class="pages">
+  <section class="collapsible text">
+    <div class="collapsible--subheader">
+      <button class="collapsible-button" aria-expanded="false" aria-controls="collapsible-more-questions">
+        Have More Questions?
+      </button>
+    </div>
+    <div class="collapsible--description" id="collapsible-more-questions" aria-hidden="true">
+      {{ event.haveMoreQuestions }}
+    </div>
+  </section>
+</div>
+{% endif %}
+
+{% set eventCategories = event.calendarCategories.level(2) %}
+{% set relatedClasses = craft.entries.section('courses').relatedTo(eventCategories).limit(3) %}
+{% set relatedEvents = craft.calendar.events({ calendar: "events", loadOccurrences: false, dateRangeStart: now }).id('not '~ event.id).relatedTo(eventCategories) %}
+
+{% if relatedClasses | length or relatedEvents | length %}
+<section id="related-events">
+
+  <h2>Related Classes and Events</h2>
+
+  {% if relatedClasses | length %}
+    {% for class in relatedClasses %}
+    <a href="{{ class.url }}" class="news-thumb--link">
+      <article class="news-thumb">
+        {% if class.featuredImage | length %}
+          <div class="news-thumb--featured-image">
+            <img src="{{ class.featuredImage.first.getUrl('circle')}}">
+          </div>
+        {% else %}
+          <div class="news-thumb--featured-image">
+            <img src="assets/images/round-placeholder.svg">
+          </div>
+        {% endif %}
+
+        <header class="news-thumb--paper-overlay paper-overlay">
+          {{ class.title }}
+        </header>
+
+      </article>
+    </a>
+    {% endfor %}
+  {% endif %}
+
+{% if relatedClasses | length < 3 and relatedEvents | length %}
+  {% for event in relatedEvents %}
+
+  <a href="/calendar/event/{{ event.id }}" class="news-thumb--link">
+    <article class="news-thumb">
+      {% if event.featuredImage | length %}
+        <div class="news-thumb--featured-image">
+          <img src="{{ event.featuredImage.first.getUrl('circle')}}">
+        </div>
+      {% else %}
+        <div class="news-thumb--featured-image">
+          <img src="assets/images/round-placeholder.svg">
+        </div>
+      {% endif %}
+
+      <header class="news-thumb--paper-overlay paper-overlay">
+        {{ event.title }}
+      </header>
+
+    </article>
+  </a>
+  {% endfor %}
+{% endif %}
+
+</section>
+
+{% endif %}
+{% endcache %}
+{% endblock %}

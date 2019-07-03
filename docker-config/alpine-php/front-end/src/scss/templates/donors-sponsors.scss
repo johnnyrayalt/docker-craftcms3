@@ -1,0 +1,51 @@
+.donors-sponsors--header {
+  margin-bottom: 1rem;
+}
+
+hr {
+  height: 2rem;
+  background: $color-gray-background;
+  border-top: none;
+  width: 115%;
+  transform: translateX(-25px);
+
+  &:first-of-type {
+    display: none;
+  }
+}
+
+.donors-sponsors--logo {
+  width: 150px;
+  margin-bottom: 1rem;
+}
+
+.donors-sponsors--link {
+  width: 100%;
+  float: left;
+  margin-bottom: .5rem;
+}
+
+
+a + .donors-sponsors--header {
+  margin-top: 3rem;
+}
+
+.donors-sponsors--body,
+.donors-sponsors--tiers {
+  @include paper;
+  margin: 1rem 0;
+  position: relative;
+  width: 85%;
+
+  @include tablet {
+    width: 100%;
+  }
+}
+
+.donors-sponsors--tiers {
+  @include clearfix;
+
+  a::after {
+    display: none;
+  }
+}

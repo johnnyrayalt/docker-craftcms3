@@ -1,0 +1,56 @@
+{% extends "_layout" %}
+
+{% set seoTitle = entry.title %}
+{% set seoDescription = entry.teaser %}
+{% if entry.featuredImage | length %}
+{% set seoImage = entry.featuredImage[0].url %}
+{% endif %}
+
+{% block content %}
+  <section>
+    <article class="news-single">
+
+      <h1 class="news-single--title">{{ entry.title }}</h1>
+      <p class="news-single--date">{{ entry.postDate.format('F d, Y') }}</p>
+
+      {% set image = entry.featuredImage.first %}
+      {% if image | length %}
+        <figure class="news-single--featured-image">
+          <img src="{{ image.getUrl()}}">
+          {% if image.imageCaption | length %}
+            <figcaption class="featured-image-caption">{{ image.imageCaption }}</figcaption>
+          {% endif %}
+        </figure>
+      {% endif %}
+
+      <div class="news-single--body text">{{ entry.body }}</div>
+
+      {% if currentUser %}
+        {% if entry.downloads | length %}
+          <div class="press-portal--body">
+            <h2>Downloads</h2>
+
+            {% for block in entry.downloads %}
+              <ul class="press-portal--download-collection">
+                <p class="press-portal--download-collection-header">{{ block.downloadsHeader }}</p>
+                {% for download in block.downloadsFiles %}
+                  {% if download.kind == 'image' %}
+                    <a class="press-portal--download-collection-image" href="{{ download.url }}">
+                      <img src="{{ download.url }}" class=""/>
+                      <span class="press-portal--download-collection-image-info">({{ download.extension|upper }}, {{ download.size|filesize }})</span>
+                    </a>
+                  {% else %}
+                    <li><a href="{{ download.url }}">{{ download.title}}</a> <span class="press-portal--download-collection-image-info">({{ download.extension|upper }}, {{ download.size|filesize }})</span></li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            {% endfor %}
+
+          </div>
+        {% endif %}
+      {% endif %}
+
+      <a href="/press-portal" class="news-single--back-link">← Return to index</a>
+    </article>
+  </section>
+{% endblock %}

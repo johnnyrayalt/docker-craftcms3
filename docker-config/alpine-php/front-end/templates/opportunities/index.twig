@@ -1,0 +1,58 @@
+{% extends "_layout" %}
+
+{% set seoTitle = "Opportunities" %}
+{% set seoDescription = entry.introduction %}
+
+{% block content %}
+
+<section>
+  <header class="section-header">
+    <h1 class="section-header--title">Opportunities</h1>
+    <ul class="breadcrumbs">
+
+        <li class="breadcrumb breadcrumb--parent-page-link"><a href="/about">About</a></li>
+
+        <li class="breadcrumb breadcrumb--current-page-link"><a href="/about/opportunities">Opportunities</a></li>
+    </ul>
+  </header>
+
+  {% include 'partials/_introduction' %}
+
+  {% for opportunity in craft.entries.section('opportunities') %}
+
+  <article class="news-post">
+    {% if opportunity.featuredImage | length %}
+      <div class="news-post--featured-image">
+        <a href="{{ opportunity.url }}">
+          <img src="{{ opportunity.featuredImage.first.getUrl('circle')}}"
+            alt="{{ opportunity.title }}">
+        </a>
+      </div>
+    {% endif %}
+
+    <div class="news-post--preview">
+      <h2 class="news-post--title"><a href="{{ opportunity.url }}">{{ opportunity.title }}</a></h2>
+      {% if opportunity.description | length %}
+      <div class="news-post--teaser">{{ opportunity.description }}</div>
+      {% endif %}
+      <div class="button"><a href="{{ opportunity.url }}">Read more</a></div>
+    </div>
+  </article>
+
+  {% endfor %}
+
+</section>
+
+<section class="rich-matrix--text">
+  <div class="rich-matrix--text-block text">
+    {{ entry.wantToLearnMoreText }}
+  </div>
+</section>
+
+<section class="rich-matrix--text">
+  <div class="rich-matrix--text-block text">
+    {{ entry.disclaimerText }}
+  </div>
+</section>
+
+{% endblock %}

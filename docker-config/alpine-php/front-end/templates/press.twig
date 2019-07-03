@@ -1,0 +1,21 @@
+{% extends "_layout" %}
+
+{% set seoTitle = "Press" %}
+{% set seoDescription = entry.introduction %}
+{% block content %}
+  <section>
+    <article class="callout">
+      <p>{{ entry.introduction }}</p>
+    </article>
+
+    <div class="news-single--body text">
+      {{ entry.body }}
+    </div>
+
+    <article class="press">
+      {% for entry in craft.entries.section('pressPortal') %}
+        {% include 'news/_post' %}
+      {% endfor %}
+    </article>
+  </section>
+{% endblock %}

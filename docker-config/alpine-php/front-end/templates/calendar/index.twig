@@ -1,0 +1,180 @@
+{% extends "_layout" %}
+{% set seoTitle = "Calendar" %}
+{% set today = "now"|date("Y-m-d") %}
+
+{% if craft.request.getParam('q') %}
+  {% set query = craft.request.getParam('q') %}
+  {% set events = craft.calendar.events({ loadOccurrences: false, dateRangeStart: today, calendar: 'events' }).search(query).order('score')%}
+  {% set classes = craft.entries.section('courses').search(query).order('score') %}
+  {% set classEvents = craft.calendar.events({ loadOccurrences: false, dateRangeStart: today, calendar: 'not events' }).relatedTo(classes) %}
+{% else %}
+  {% set query = null %}
+  {% set events = craft.calendar.events({ loadOccurrences: false }).order('startDate asc').limit(null) %}
+  {% set classEvents = null %}
+{% endif %}
+
+{% if craft.request.getParam('day') | length %}
+  {% set dayCategory = craft.categories.group('calendarDayCategories').slug(craft.request.getParam('day')).first() %}
+  {% set events = events.relatedTo(dayCategory) %}
+{% endif %}
+
+{% if craft.request.getParam('season') | length %}
+  {% set seasonCategory = craft.categories.group('calendarSeasonCategories').slug(craft.request.getParam('season')).first() %}
+  {% set events = events.relatedTo(seasonCategory) %}
+{% endif %}
+
+{% if craft.request.getParam('certification') %}
+  {% set certificationSlug = craft.request.getParam('certification') %}
+  {% set certificationCategory = craft.categories.group('certifications').slug(certificationSlug) %}
+  {% set query = certificationCategory[0].title %}
+  {% set events = null %}
+  {% set classes = craft.entries.section('courses').relatedTo(certificationCategory) %}
+  {% set classEvents = craft.calendar.events({ loadOccurrences: false, dateRangeStart: today, calendar: 'not events' }).relatedTo(classes) %}
+{% endif %}
+
+{% set categorySelected = false %}
+
+{% if craft.request.getParam('category') | length %}
+  {% set categorySlug = craft.request.getParam('category') %}
+  {% set categorySelected = true %}
+  {% set category = craft.categories.slug(categorySlug).first() %}
+  {% if category.ancestors | length %}
+    {% set parentCategory = category.getAncestors(1).first() %}
+  {% else %}
+    {% set parentCategory = category %}
+  {% endif %}
+  {% if parentCategory.slug == 'event' %}
+    {% set events = events.relatedTo(category) %}
+  {% else %}
+    {% set entriesByCategory = craft.entries.section('courses').relatedTo(category) %}
+    {% set events = events.relatedTo(entriesByCategory) %}
+  {% endif %}
+{% endif %}
+
+
+{% block content %}
+{#
+{% cache %}
+#}
+
+
+<article class="{{ parentCategory is defined ? 'calendar--' ~ parentCategory.slug }}">
+  <section>
+    <header class="section-header" id="calendar-section-header">
+      <h1>Calendar</h1>
+      <div class="calendar-toggle-wrapper">
+        <a href="/calendar" class="active" id="button-list-view">{% include 'svg/list-icon.svg' %}</a>
+        <a href="/calendar/grid" class="" id="button-calendar-view">{% include 'svg/month-icon.svg' %}</a>
+      </div>
+    </header>
+  </section>
+
+  <div id="list-view">
+    <div class="filters">
+
+      <div class="calendar-categories">
+        <ul class="parent-categories">
+          <li class="{{ not categorySelected ? 'active' }}"><a href="/calendar">Everything</a></li>
+          {% nav calendarCategory in craft.categories.group('calendarCategories').level(1) %}
+            <li class="{{ categorySelected and parentCategory.slug == calendarCategory.slug ? 'active' }} {{calendarCategory.slug}}"><a href="/calendar?category={{ calendarCategory.slug }}">{{ calendarCategory.title }}{{ calendarCategory.title == "Class" ? "es" : "s" }}</a></li>
+          {% endnav %}
+        </ul>
+      </div>
+
+      <div class="search-and-dropdown-wrapper">
+
+        <div class="dropdown">
+          <button class="dropdown-toggle" type="button" id="dayDropdown">
+            <h6>Days Offered</h6>
+            <h3>{{ dayCategory is defined ? dayCategory.title : 'All Days' }}</h3>
+          </button>
+          <ul class="dropdown-menu" >
+            <li><a class="dropdown-item" href="calendar">All Days</a></li>
+            {% for day in craft.categories.group('calendarDayCategories') %}
+            <li><a class="dropdown-item" href="calendar?day={{ day.slug }}">{{ day.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="dropdown">
+          <button class="dropdown-toggle" type="button" id="seasonDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <h6>Season</h6>
+            <h3>{{ seasonCategory is defined ? seasonCategory.title : 'All Seasons' }}</h3>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="seasonDropdown">
+            <li><a class="dropdown-item" href="calendar">All Seasons</a></li>
+            {% for season in craft.categories.group('calendarSeasonCategories') %}
+            <li><a class="dropdown-item" href="calendar?season={{ season.slug }}">{{ season.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="search-wrapper {{ query ? 'open' }}">
+          <a id="btn-search" {% if query %}href="calendar"{% endif %}></a>
+          <form action="calendar" id="form-search">
+            <input type="search" name="q" value="{{ query }}" class="search-field" placeholder="Search the calendar...">
+          </form>
+        </div>
+      </div>
+    </div>
+    {% if parentCategory is defined %}
+      <ul class="child-categories">
+        <li class="{{ category == parentCategory ? 'active' }} {{ parentCategory.slug }}"><a href="/calendar?category={{ parentCategory.slug }}">All {{ parentCategory.title }}{{ parentCategory.title == "Class" ? "es" : "s" }}</a></li>
+        {% nav calendarCategory in parentCategory.children %}
+          <li class="{{ categorySelected and category.slug == calendarCategory.slug ? 'active' }} {{ parentCategory.slug }}"><a href="/calendar?category={{ calendarCategory.slug }}">{{ calendarCategory.title }}</a></li>
+        {% endnav %}
+      </ul>
+    {% endif %}
+
+    <section>
+    {% if not classEvents | length and not events | length %}
+    <h2>We're sorry, your search did not return any results.</h2>
+    {% else %}
+
+      {% if query %}
+
+        {% if classEvents | length %}
+        <h2>Classes</h2>
+
+        {% for event in classEvents %}
+
+        {% include 'partials/_event_listing' %}
+
+        {% endfor %}
+
+        {% endif %}
+
+        {% if events | length %}
+        <h2>Events</h2>
+
+        {% for event in events %}
+
+        {% include 'partials/_event_listing' %}
+
+        {% endfor %}
+
+        {% endif %}
+
+      {% else %}
+
+        {% for event in events %}
+{#        
+  dateRangeStart wasn't filtering out all past events, could be a bug in the plugin?
+  Also, exhibitions need to show up after the start date has passed,
+  so dateRangeStart: today was removed from the events query on line 12
+  so exhibitions with end dates in the future still show up here
+#}
+          {% if (event.startDate.format('Y-m-d') >= today) or (event.calendarCategories | length > 1 and event.calendarCategories[1].slug == 'exhibitions' and event.endDate.format('Y-m-d') >= today) %}
+          {% include 'partials/_event_listing' %}
+          {% endif %}
+        {% endfor %}
+
+      {% endif %}
+    {% endif %}
+    </section>
+  </div>
+</article>
+{#
+{% endcache %}
+#}
+{% endblock %}

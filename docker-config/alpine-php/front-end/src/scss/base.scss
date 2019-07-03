@@ -1,0 +1,111 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: $color-gray-background;
+  font-family: $type-family-mono;
+  font-size: $type-size-base;
+  line-height: $type-leading-base;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0 0 0 150px;
+  overflow-x: hidden;
+  padding: 0;
+
+  @include tablet {
+    margin: 0;
+  }
+}
+
+header,
+main,
+footer,
+section,
+article {
+  @include clearfix;
+  clear: both;
+  display: block;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  @include rollover;
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
+h1 {
+  font-family: $type-family-sans;
+  font-size: $type-size-huge;
+  font-weight: bold;
+  line-height: $type-leading-huge;
+
+  @include mobile {
+    font-size: 2.25rem;
+  }
+}
+
+h2 {
+  font-family: $type-family-sans;
+  font-size: $type-size-big;
+  line-height: $type-leading-big;
+  margin-bottom: 2rem;
+}
+
+h3 {
+  font-size: $type-size-base;
+}
+
+h4 {
+  color: $color-gray-dark;
+  margin: .25rem 0;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+img,
+svg,
+object {
+  border: 0;
+  max-width: 100%;
+}
+
+figure {
+  margin: 0;
+  padding: 0;
+}
+
+section {
+}
+
+article {
+  font-size: $type-size-base;
+}
+
+*:focus {
+  outline: auto currentColor;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid $color-gray-dark;
+}

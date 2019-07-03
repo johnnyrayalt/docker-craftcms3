@@ -1,0 +1,14 @@
+{% extends "_layout" %}
+{% set seoTitle = "About" %}
+
+{% block content %}
+  <h1>About</h1>
+
+  {% for entry in craft.entries.section('about').find() %}
+    <article>
+      <h3><a href="{{ entry.url }}">{{ entry.title }}</a></h3>
+      <p>Posted on {{ entry.postDate.format('F d, Y') }}</p>
+      {{ entry.body.getPage(1) }}
+    </article>
+  {% endfor %}
+{% endblock %}

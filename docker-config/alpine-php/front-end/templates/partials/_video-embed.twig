@@ -1,0 +1,6 @@
+<div class="video-embed">
+  {% set embed = craft.embeddedAssets.fromAsset(video) %}
+  {% if embed %}
+    {{ embed.safeHtml|raw }}
+  {% endif %}
+</div>

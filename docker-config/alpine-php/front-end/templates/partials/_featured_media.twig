@@ -1,0 +1,18 @@
+{% set featuredMedia = entry.featuredMedia %}
+{% if featuredMedia.first | length %}
+  <figure class="featured-media" id="featured-media">
+    {% for media in featuredMedia %}
+      {% if media.type == 'featuredImage' and media.image.first | length %}
+        <img src="{{ media.image.first.getUrl('featuredImage') }}">
+        {% if media.image.first.imageCaption | length %}
+          <figcaption class="featured-image-caption featured-image-caption--page">{{ media.image.first.imageCaption }}</figcaption>
+        {% endif %}
+      {% elseif media.type == 'featuredVideo' and media.video.first | length %}
+        {% set embed = craft.embeddedAssets.fromAsset(media.video.first) %}
+        {% if embed %}
+          {{ embed.safeHtml|raw }}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </figure>
+{% endif %}

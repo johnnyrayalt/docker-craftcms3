@@ -1,0 +1,42 @@
+.link-collection {
+  a {
+    text-decoration: none;
+
+    &:hover {
+      color: $color-white;
+    }
+  }
+}
+
+.link-collection--header {
+  margin-bottom: .5rem;
+}
+
+.link-collection--list-item {
+  margin-bottom: .5rem;
+
+  a::after {
+    display: none;
+  }
+}
+
+.link-collection--list-item-link {
+  @include color-pop;
+  background: $color-red;
+  color: $color-white;
+  display: inline-block;
+  float: left;
+  font-size: $type-size-big;
+  line-height: 1.25;
+  margin: 0 .75rem .75rem 0;
+  padding: 1rem;
+  width: auto;
+
+  @include tablet {
+    font-size: 1.5rem;
+  }
+
+  @include mobile {
+    font-size: 1.2rem;
+  }
+}

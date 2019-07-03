@@ -1,0 +1,48 @@
+<div class="date-row">
+  <div class="date-info">
+
+    {% if event.startDate.format('M j') != event.endDate.format('M j') %}
+    <h3>{{ date.startDate.format("l, M j g:ia") }} &ndash; {{ date.endDate.format("l, M j g:ia") }}</h3>
+    {% else %}
+      <h3>{{ date.startDate.format("M j") }}{% if dateWithAllSessions.repeating %}&ndash;{{ dateWithAllSessions.occurrences[dateWithAllSessions.occurrenceCount - 1].endDate.format("M j")}}{% endif %}</h3>
+      <p>
+        {% set daily = false %}
+        {% if date.repeating %}
+          {% set repeatRuleArray = date.readableRepeatRule | split(' ') %}
+          {% set dayArray = [] %}
+
+          {% for string in repeatRuleArray %}
+            {% if 'day' in string %}
+              {% set string = string | trim(',') %}
+              {% set dayArray = dayArray | merge([string]) %}
+            {% elseif 'Daily' in string %}
+              {% set daily = true %}
+            {% endif %}
+          {% endfor %}
+
+          {% if dayArray | length %}
+          {% for day in dayArray %}
+            {% if loop.last and loop.length > 1 %} & {% endif %}{{ day }}s{% if loop.index < (loop.length - 1) %}, {% endif %}
+          {% endfor %}
+          {% elseif daily == true %}
+          Daily
+          {% endif %}
+        {% else %}
+          {{ date.startDate.format("l") }}
+        {% endif %}
+      </p>
+      <p>
+        {{ date.startDate.format("g:ia") }}&thinsp;&ndash;&thinsp;{{ date.endDate.format("g:ia") }}
+      </p>
+    {% endif %}
+  </div>
+
+  <div>
+ {% if showButton and date.eventUrl %}
+   {% set ticketUrl = date.eventUrl %}
+   <a href="{{ ticketUrl }}" class="button" target="_blank">Register</a>
+   {% else %}
+   <a href="{{ ticketUrl }}" class="button" target="_blank">Join Waitlist</a>
+ {% endif %}
+  </div>
+</div>

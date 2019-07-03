@@ -1,0 +1,89 @@
+.payment-amount,
+.billing-address,
+.payment-info {
+  @include paper;
+  width: 90%;
+
+  @include tablet {
+    width: 100%;
+  }
+}
+
+.payment-amount--add-on {
+  display: inline-block;
+  font-family: $type-family-sans;
+  font-size: 3rem;
+}
+
+.payment-amount--input {
+  height: 60px;
+  padding-right: .6rem;
+  width: 7rem;
+}
+
+.payment-amount--text {
+  display: inline-block;
+  font-size: 1.25rem;
+
+  @include mobile {
+    margin-top: 1rem;
+  }
+}
+
+// Billing address
+
+.billing-address--first-name,
+.billing-address--last-name {
+  width: 49%;
+
+  @include mobile {
+    width: 100%;
+  }
+}
+
+.billing-address--email,
+.billing-address--street,
+.billing-address--details {
+  width: 100%;
+}
+
+
+.billing-address--city,
+.billing-address--state,
+.billing-address--zip {
+  width: 32%;
+
+  @include mobile {
+    width: 100%;
+  }
+}
+
+// Payment info
+
+.payment-info--card-number {
+  width: 100%;
+}
+
+.payment-info--exp-month,
+.payment-info--exp-year {
+  width: 40%;
+
+  @include mobile {
+    width: 48%;
+  }
+}
+
+.payment-info--exp-year {
+  .caret {
+    top: 30px;
+  }
+}
+
+.payment-info--cvc {
+  display: inline-block;
+  width: 15%;
+
+  @include mobile {
+    width: 30%;
+  }
+}

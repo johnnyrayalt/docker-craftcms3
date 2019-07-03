@@ -1,0 +1,78 @@
+{% set today = "now"|date("Y-m-d") %}
+
+{% if block.type == 'featuredEvents' %}
+  {% if block.featuredEvents.dateRangeStart(today) | length %}
+    {% set events = block.featuredEvents.dateRangeStart(today) %}
+  {% else %}
+    {% set events = null %}
+  {% endif %}
+
+{% else %}
+
+  {% if block.eventCategory.level(2) | length %}
+    {% set eventCategory = block.eventCategory.level(2)[0] %}
+  {% else %}
+    {% set eventCategory = block.eventCategory[0] %}
+  {% endif %}
+
+  {% if block.eventCategory[0].slug == 'class' or block.eventCategory[0].slug == 'youth-program' %}
+    {% set relatedCourses = craft.entries.section('courses').relatedTo(eventCategory) %}
+
+    {% set events = craft.calendar.events({ loadOccurrences: false, dateRangeStart: today, calendar: 'not alerts' }).relatedTo(relatedCourses) %}
+  {% else %}
+    {% set events = craft.calendar.events({ loadOccurrences: false, dateRangeStart: today, calendar: 'not alerts' }).relatedTo(eventCategory) %}
+  {% endif %}
+
+{% endif %}
+
+
+<h2>Upcoming Events</h2>
+
+{# NOTE: the eventCount variable is used as a workaround for a bug in the Calendar plugin, which has issues when trying to limit the number of events returned #}
+{% set eventCount = 0 %}
+{% for event in events %}
+  {% if eventCount < 3 %}
+  {% set eventCount = eventCount + 1 %}
+
+  {% if event.calendar.handle == 'classes' or event.calendar.handle == 'youthPrograms' %}
+    {% set eventUrl = '/calendar/' ~ event.courseEntry.first().slug %}
+  {% else %}
+    {% set eventUrl = '/calendar/event/' ~ event.id %}
+  {% endif %}
+
+  <a href="{{ eventUrl }}" class="news-thumb--link">
+    <article class="news-thumb">
+      {% if event.calendar.handle == 'classes' or event.calendar.handle == 'youthPrograms' %}
+        {% set image = event.courseEntry.first().featuredImage %}
+      {% else %}
+        {% set image = event.featuredImage %}
+      {% endif %}
+
+      {% if image | length %}
+        <div class="news-thumb--featured-image">
+          <img src="{{ image.first.getUrl('circle')}}">
+        </div>
+      {% else %}
+        <div class="news-thumb--featured-image">
+          <img src="assets/images/round-placeholder.svg">
+        </div>
+      {% endif %}
+
+      <header class="news-thumb--paper-overlay paper-overlay">
+        {{ event.title }}
+        <h3>
+          {{ event.startDate.format('M j') }}
+          {% if event.multiDay | length %}
+            &ndash; {{ event.endDate.format('M j') }}
+          {% endif %}
+          {% if not event.allDay | length %}
+            {{ event.startDate.format('g:ia') }}&thinsp;&ndash;&thinsp;{{ event.endDate.format('g:ia') }}
+          {% endif %}
+        </h3>
+      </header>
+
+    </article>
+  </a>
+  {% endif %}
+
+{% endfor %}

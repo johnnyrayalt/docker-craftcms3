@@ -1,0 +1,21 @@
+<section class="link-collection">
+  <header>
+    <h2 class="link-collection--header">{{ entry.linkCollectionHeader }}</h2>
+  </header>
+
+  <ul class="link-collection--list">
+    {% for block in entry.linkCollection %}
+      {% if block.type == 'internalLink' %}
+        <li class="link-collection--list-item">
+          <a class="link-collection--list-item-link" href="{{ block.internalLink.first().getUrl() }}">{{ block.text }}</a>
+        </li>
+      {% endif %}
+
+      {% if block.type == 'externalLink' %}
+        <li class="link-collection--list-item">
+          <a class="link-collection--list-item-link" href="{{ block.externalLink }}" target="_blank">{{ block.text }}</a>
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</section>

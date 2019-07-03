@@ -1,0 +1,38 @@
+{% extends "_layout" %}
+
+{% set seoTitle = entry.title %}
+{% set seoDescription = entry.introduction %}
+
+{% block content %}
+
+  <section>
+    <header class="section-header">
+      <h1 class="section-header--title">{{ entry.title }}</h1>
+    </header>
+
+    {% include 'partials/_featured_media' with { entry: entry } only %}
+    {% include 'partials/_introduction' with { entry: entry } only %}
+
+    <div class="donors-sponsors--tiers">
+      {% if entry.donorGroups | length %}
+        {% for block in entry.donorGroups %}
+          {% if block.type == "sponsorHeader" %}
+            <hr>
+            <h2 class="donors-sponsors--header">{{ block.sponsorHeader }}</h2>
+          {% elseif block.type == "sponsorLogo" %}
+            <a href="{{ block.sponsorLink }}" target="_blank"><img src="{{ block.sponsorLogo.first.getUrl() }}" class="donors-sponsors--logo" /></a>
+          {% elseif block.type == "sponsorLink" %}
+            <a href="{{ block.sponsorLink }}" target="_blank" class="donors-sponsors--link">{{ block.sponsorName }}</a>
+          {% elseif block.type == "sponsorText" %}
+            <span class="donors-sponsors--link">{{ block.sponsorName }}</span>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="donors-sponsors--body text">
+    {{ entry.body }}
+  </section>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+
+{% macro cost(entry) %}
+{% spaceless %}
+{% if entry.tickets.type('paidTicket') | length %}
+  {% set ticket = entry.tickets.type('paidTicket')[0] %}
+  {% set cost = ticket.price|currency('USD') %}
+
+{% elseif entry.tickets.type('freeTicket') | length %}
+  {% set cost = 'Free' %}
+{% else %}
+  {% set cost = null %}
+{% endif %}
+
+{{ cost }}
+{% endspaceless %}
+{% endmacro cost %}
+
+{% macro capacity(entry) %}
+{% spaceless %}
+{% if entry.tickets.type('paidTicket') | length %}
+  {% set ticket = entry.tickets.type('paidTicket')[0] %}
+
+  {% set capacity = ticket.quantity %}
+{% elseif entry.tickets.type('freeTicket') | length %}
+
+  {% set capacity = entry.tickets.type('freeTicket')[0].quantity %}
+{% else %}
+  {% set capacity = null %}
+{% endif %}
+
+{{ capacity }}
+{% endspaceless %}
+{% endmacro capacity %}

@@ -1,0 +1,260 @@
+{% extends "_layout" %}
+
+{% set seoTitle = "Donate" %}
+
+{% if craft.request.getParam('planAmount') %}
+  {% set planAmount = craft.request.getParam('planAmount') %}
+{% endif %}
+
+{% if craft.request.getParam('planInterval') %}
+  {% set planInterval = craft.request.getParam('planInterval') %}
+  {% set interval = craft.request.getParam('planInterval') ~ 'ly' %}
+{% else %}
+  {% set interval = 'one-time' %}
+{% endif %}
+
+{% if craft.request.getParam('planIntervalCount') %}
+  {% set planIntervalCount = craft.request.getParam('planIntervalCount') %}
+{% endif %}
+
+{% block content %}
+  <header class="section-header">
+    <h1 class="section-header--title">Donate</h1>
+    <ul class="breadcrumbs">
+      <li class="breadcrumb breadcrumb--parent-page-link"><a href="/donate">Donation Amount</a></li>
+      <li class="breadcrumb">Payment Information</li>
+    </ul>
+  </header>
+
+  <div id="payment-form" class="payment-form">
+
+    <form class="form-horizontal" id="charge-form" method="post" action="" accept-charset="UTF-8" data-publicKey="{{ craft.charge.getPublicKey }}">
+
+      <input type="hidden" name="action" value="charge/charge">
+
+     {% set options = {
+        'allowDynamic': true,
+        'actions' : {
+            'onSuccess': {
+                'email' : { 0: 'donation-thank-you'},
+            }
+        }} %}
+
+      {{ craft.charge.setPaymentOptions(options) }}
+
+      <input type="hidden" name="cardAddressCountry" value="US">
+
+      {% if planInterval is defined %}
+      <input type="hidden" name="planInterval" value="{{ planInterval }}">
+      {% endif %}
+
+      {% if planIntervalCount is defined %}
+      <input type="hidden" name="planIntervalCount" value="{{ planIntervalCount }}">
+      {% endif %}
+
+      <section class="payment-amount">
+        <div class="input-group">
+          <span class="payment-amount--add-on">$</span>
+          <input type="number" step="5" min="0" id="planAmount" name="planAmount" value="{{ planAmount is defined ? planAmount }}" class="payment-amount--input">
+        </div>
+
+        {% if interval == 'one-time' %}
+          <p class="payment-amount--text">You are making a <strong>one time</strong> donation.</p>
+        {% else %}
+          <p class="payment-amount--text">You are making a <strong>{{ interval }}</strong> donation.</p>
+        {% endif %}
+      </section>
+
+      <section class="billing-address" id="contact-info">
+        <h2>Billing Address</h2>
+
+        <div class="row--field-group">
+          <div class="form--field-group billing-address--first-name" id="group-first-name">
+            <label for="firstName" class="form--input-label">First Name</label>
+            <input type="text" class="form--input" id="firstName" name="meta[firstName]" required="true" value="">
+          </div>
+
+          <div class="form--field-group billing-address--last-name" id="group-last-name">
+            <label for="lastName" class="form--input-label">Last Name</label>
+            <input type="text" class="form--input" id="lastName" name="meta[lastName]" required="true" value="">
+          </div>
+        </div>
+
+        <input type="hidden" class="form-control" id="customerName" name="customerName" value="">
+
+        <div class="form--field-group billing-address--email">
+          <label for="customerEmail" class="form--input-label">Email address</label>
+          <input type="email" class="form--input" id="customerEmail" name="customerEmail" required value=""> {% if charge is defined %} {{ _self.errorList(charge.getErrors('customerEmail')) }} {% endif %}
+        </div>
+
+        <div class="form--field-group billing-address--street">
+          <label for="cardAddressLine1" class="form--input-label">Street address</label>
+          <div>
+            <input id="cardAddressLine1" class="form--input" type="text" name="cardAddressLine1" value="" required="true">
+          </div>
+        </div>
+        <div class="row--field-group billing-address--details">
+          <div class="form--field-group billing-address--city" id="group-city">
+            <label for="cardAddressCity" class="form--input-label">City</label>
+            <input id="cardAddressCity" class="form--input" type="text" name="cardAddressCity" value="" required="true">
+          </div>
+
+          <div class="form--field-group billing-address--state" id="group-state">
+            <label for="cardAddressState" class="form--input-label">State</label>
+            <select name="cardAddressState" class="form--input" required="true">
+              <option value="" disabled selected></option>
+              <option value="AL">AL</option>
+              <option value="AK">AK</option>
+              <option value="AZ">AZ</option>
+              <option value="AR">AR</option>
+              <option value="CA">CA</option>
+              <option value="CO">CO</option>
+              <option value="CT">CT</option>
+              <option value="DE">DE</option>
+              <option value="DC">DC</option>
+              <option value="FL">FL</option>
+              <option value="GA">GA</option>
+              <option value="HI">HI</option>
+              <option value="ID">ID</option>
+              <option value="IL">IL</option>
+              <option value="IN">IN</option>
+              <option value="IA">IA</option>
+              <option value="KS">KS</option>
+              <option value="KY">KY</option>
+              <option value="LA">LA</option>
+              <option value="ME">ME</option>
+              <option value="MD">MD</option>
+              <option value="MA">MA</option>
+              <option value="MI">MI</option>
+              <option value="MN">MN</option>
+              <option value="MS">MS</option>
+              <option value="MO">MO</option>
+              <option value="MT">MT</option>
+              <option value="NE">NE</option>
+              <option value="NV">NV</option>
+              <option value="NH">NH</option>
+              <option value="NJ">NJ</option>
+              <option value="NM">NM</option>
+              <option value="NY">NY</option>
+              <option value="NC">NC</option>
+              <option value="ND">ND</option>
+              <option value="OH">OH</option>
+              <option value="OK">OK</option>
+              <option value="OR">OR</option>
+              <option value="PA">PA</option>
+              <option value="RI">RI</option>
+              <option value="SC">SC</option>
+              <option value="SD">SD</option>
+              <option value="TN">TN</option>
+              <option value="TX">TX</option>
+              <option value="UT">UT</option>
+              <option value="VT">VT</option>
+              <option value="VA">VA</option>
+              <option value="WA">WA</option>
+              <option value="WV">WV</option>
+              <option value="WI">WI</option>
+              <option value="WY">WY</option>
+            </select>
+            <span class="caret"></span>
+          </div>
+
+          <div class="form--field-group billing-address--zip" id="group-zip">
+            <label for="cardAddressZip" class="form--input-label">Zip</label>
+            <input id="cardAddressZip" class="form--input" type="text" name="cardAddressZip" value="" required="true">
+          </div>
+
+          <label class="form--input-label">Leave a comment</label>
+          <input type="text" name="meta[comment]" class="form--input">
+
+          <label class="form--input-label">
+            <input type="checkbox" value="off" name="waive-benefits-checkbox" class="form--checkbox" id="waiveBenefitsCheckbox"> I would like to waive my membership benefits.
+          </label>
+          <input type="hidden" name="meta[waiveBenefits]" id="waiveBenefits" value="no">
+        </div>
+      </section>
+
+      <section class="callout payment-info" id="payment-info">
+
+        <h2>Payment Information</h2>
+
+        <div class="form--field-group payment-info--card-number">
+          <label for="cardNumber" class="form--input-label">Card Number</label>
+          <input type="text" class="form--input" id="cardNumber" placeholder="" data-stripe="number" value="{{ craft.config.devMode ? '4242424242424242'}}">
+        </div>
+
+        <div class="row--field-group">
+          <div class="form--field-group payment-info--exp-month" id="group-exp-month">
+            <label for="cardExpMonth" class="form--input-label">Expiration</label>
+
+            <select class="form--input" data-stripe="exp_month" id="cardExpMonth" required>
+
+              <option value="" disabled selected></option>
+
+              {% for month in craft.i18n.getLocaleData().getMonthNames() %}
+              <option value="{{ loop.index }}">{{ month }}</option>
+              {% endfor %}
+            </select>
+            <span class="caret"></span>
+          </div>
+
+          <div class="form--field-group payment-info--exp-year" id="group-exp-year">
+            <select class="form--input" data-stripe="exp_year" id="cardExpYear">
+              <option value="" disabled selected></option>
+              {% for year in now.year..now.year+20 %}
+              <option value="{{ year }}">{{ year }}</option>
+              {% endfor %}
+            </select>
+            <span class="caret exp-year-caret"></span>
+          </div>
+
+
+          <div class="form--field-group payment-info--cvc" id="group-cvc">
+            <label for="cardCvc" class="form--input-label">CVC</label>
+            <div>
+              <input type="text" class="form--input" id="cardCvc" placeholder="" data-stripe="cvc" value="{{ craft.config.devMode ? '123'}}">
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <input type="submit" class="button button--donate" value="Donate">
+
+      {% macro errorList(errors) %} {% if errors %}
+      <div class="alert alert-warning">
+        {% for error in errors %}
+        <p>{{ error|t }}</p>
+        {% endfor %}
+      </div>
+      {% endif %} {% endmacro %} {% if charge is defined %} {{ _self.errorList(charge.getErrors('general')) }} {% endif %}
+
+      <div id="payment-errors"></div>
+
+    </form>
+
+  </div>
+
+
+  {% includeJsFile resourceUrl('charge/js/stripe_v2.min.js') %}
+  {% includeJsFile resourceUrl('charge/js/jquery.charge.js') %}
+  {% includejs %}
+  (function() {
+
+    $(document).ready(function(){
+
+      $("#charge-form").on("submit", function(e) {
+        var $fullName = $("#firstName").val() + " " + $("#lastName").val();
+        $("#customerName").val($fullName);
+
+        if (document.getElementById('waiveBenefitsCheckbox').checked) {
+          $("#waiveBenefits").val("yes");
+        }
+        return true;
+      });
+    });
+
+    Stripe.setPublishableKey('{{ craft.charge.getPublicKey() }}');
+    $(this).charge('#charge-form', '#payment-errors');
+  })();
+  {% endincludejs %}
+{% endblock %}

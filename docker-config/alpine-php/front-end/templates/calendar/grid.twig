@@ -1,0 +1,21 @@
+{% extends "_layout" %}
+{% set seoTitle = "Calendar" %}
+
+{% block content %}
+{% cache %}
+<article>
+  <section>
+    <header class="section-header" id="calendar-section-header">
+      <h1>Calendar</h1>
+      <div class="calendar-toggle-wrapper">
+        <a href="/calendar" id="button-list-view">{% include 'svg/list-icon.svg' %}</a>
+        <a href="/calendar/grid" class="active" id="button-calendar-view">{% include 'svg/month-icon.svg' %}</a>
+      </div>
+    </header>
+  </section>
+  <div id="calendar-view">
+    {% include 'partials/_full_calendar' %}
+  </div>
+</article>
+{% endcache %}
+{% endblock %}

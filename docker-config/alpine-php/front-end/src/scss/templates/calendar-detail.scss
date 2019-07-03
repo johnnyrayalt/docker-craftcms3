@@ -1,0 +1,148 @@
+.class-detail-page{
+  .landing-page--text{
+    @include mobile{
+      width: 100%;
+    }
+  }
+}
+
+#class-details {
+  .calendar-post {
+    width: 85%;
+    margin-top: 2rem;
+    @include mobile{
+      margin-top: 1rem;
+      width: 100%;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .news-post--preview {
+      margin-top: 0;
+      padding-left: 2.5rem;
+      margin-left: -2.5rem;
+      padding-top: 1.2rem;
+      padding-bottom: 0.5rem;
+      width: 100%;
+      @include mobile{
+        margin-left: auto;
+        padding: 1rem;
+      }
+    }
+
+    .news-post--featured-image{
+      @include mobile{
+        width: 80vw;
+        height: 80vw;
+        margin-bottom: 1rem;
+      }
+    }
+
+    li {
+      margin-bottom: 0.6rem;
+    }
+  }
+}
+
+
+.table--date {
+  width: 100%;
+  border-bottom: 1px solid $color-gray;
+  margin-bottom: 1rem;
+
+  &:last-child  {
+    border-bottom: none;
+  }
+  .date-row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+  }
+  .date-info{
+    display: flex;
+    @include mobile{
+      flex-direction: column;
+    }
+    *{
+      margin: 0;
+      margin-right: 2.5rem;
+      @include mobile{
+        margin-bottom: .25rem;
+      }
+    }
+  }
+
+  .session-listing {
+    color: $color-gray-dark;
+    font-size: .875rem;
+    -webkit-font-smoothing: antialiased;
+    margin: 0 0 .5rem ;
+  }
+}
+
+#class-details {
+  address {
+    font-style: normal;
+  }
+}
+
+.location-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+
+  .location-info {
+    flex-basis: 40%;
+    position: relative;
+    @include mobile{
+      flex-basis: 100%;
+    }
+
+    .directions-link {
+      position: absolute;
+      bottom: 0;
+      display: block;
+      margin-top: 1rem;
+      @include mobile{
+        position: static;
+        margin-bottom: 1rem;
+      }
+    }
+  }
+
+  .location-map {
+    flex-basis: 60%;
+    padding-left: 1rem;
+    @include mobile{
+      flex-basis: 100%;
+      padding-left: 0;
+    }
+  }
+}
+
+.button.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.policies{
+  h3{
+    margin-top: 2rem;
+    &:nth-child(2){
+      margin-top: 0;
+    }
+  }
+  p, ul{
+    margin: 0 0 1rem;
+  }
+
+}
+
+.news-thumb--link.related-event{
+  &.link-class:hover{
+    color: $color-red;
+  }
+  &.link-youth-program:hover{
+    color: $color-green;
+  }
+}

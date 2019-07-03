@@ -1,0 +1,37 @@
+{% extends "_layout" %}
+{% set title = "Press Portal Login" %}
+{% requireLogin %}
+
+{% block content %}
+  <section>
+    <header class="section-header">
+      <h1 class="section-header--title">Press Portal Login</h1>
+    </header>
+    <div class="callout">This is Open Signal's password-protected press portal. To request access to the portal — or for other press inquiries — please contact Rebecca Burrell at rebecca [at] opensignalpdx.org or (503) 673-8709.</div>
+  </section>
+
+  <section>
+    <form method="post" accept-charset="UTF-8" class="login-form">
+      {{ getCsrfInput() }}
+      <input type="hidden" name="action" value="users/login">
+      <input type="hidden" name="redirect" value="press-portal">
+
+      <h3><label for="loginName">Username or email</label></h3>
+      <input id="loginName" type="text" name="loginName"
+          value="{{ craft.session.rememberedUsername }}" class="form--input">
+
+      <h3><label for="password">Password</label></h3>
+      <input id="password" type="password" name="password" class="form--input">
+
+      <label class="form--input-label login-form--remember-me">
+        <input type="checkbox" name="rememberMe" value="1" class="form--checkbox"> Remember me
+      </label>
+
+      <input type="submit" value="Login" class="form--submit-button button">
+
+      {% if errorMessage is defined %}
+        <p>{{ errorMessage }}</p>
+      {% endif %}
+    </form>
+  </section>
+{% endblock %}

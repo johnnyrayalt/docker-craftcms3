@@ -1,0 +1,91 @@
+{% if event.calendar.handle == 'events' %}
+  {% set entry = event %}
+{% else %}
+  {% set entry = event.courseEntry.first() %}
+{% endif %}
+
+
+{% if event.calendar.handle == 'alerts' %}
+  <div class="news-post calendar-post alert">
+    <div class="news-post--preview">
+      <label>Alert</label>
+      <h2 class="news-post--title">{{ event.title }}</h2>
+
+      <h3>
+        {{ event.startDate.format('M j') }}
+        {% if event.multiDay | length %}
+          &ndash; {{ event.endDate.format('M j') }}
+        {% endif %}
+        {% if not event.allDay | length %}
+          {{ event.startDate.format('g:ia') }}&thinsp;&ndash;&thinsp;{{ event.endDate.format('g:ia') }}
+        {% endif %}
+      </h3>
+      {% if event.description | length %}
+      <div class="news-post--teaser">{{ event.description }}</div>
+      {% endif %}
+    </div>
+  </div>
+{% elseif not event.parentEvent | length %}
+  {% import "partials/_cost_and_capacity" as meta %}
+  {% set cost = meta.cost(event) %}
+  <a href="{% if event.calendar.handle == 'events' %}calendar/event/{{ event.id }}{% else %}{{ entry.url }}{% endif %}" class="event--link">
+    <div class="news-post calendar-post">
+      {% if entry.featuredImage | length %}
+      <div class="news-post--featured-image">
+        <img src="{{ entry.featuredImage.first.getUrl('circle')}}"
+            alt="{{ entry.title }}">
+      </div>
+      {% endif %}
+
+      <div class="news-post--preview {% if entry.calendarCategories | length %}preview-{{ entry.calendarCategories.first().slug }}{% endif %}">
+        {% for category in entry.calendarCategories %}
+        <label>{{ category }}</label>
+        {% endfor %}
+        <h2 class="news-post--title">{{ entry.title }}</h2>
+        {% if entry.subtitle | length %}
+        <h3>{{ entry.subtitle }}</h3>
+        {% endif %}
+        {% if entry.description | length %}
+        <div class="news-post--teaser">{{ entry.description }}</div>
+        {% endif %}
+        <dl>
+          <span>
+
+
+            {% if cost %}
+            <dt>Cost:</dt>
+            <dd class="cost bold">{{ cost }}</dd>
+            {% endif %}
+
+          </span>
+          <span>
+            <dt>Date:</dt>
+            <dd class="bold">{% if event.calendar.handle != 'events' %}Starts {% endif %}
+              {% if event.startDate.format('M j') != event.endDate.format('M j') %}
+                {{ event.startDate.format('M j') }} &ndash; {{ event.endDate.format('M j') }}
+              {% else %}
+                {{ event.startDate.format('M j') }}
+              {% endif %}
+            </dd>
+            </span>
+          {% if entry.ages | length %}
+            <span>
+              <dt>Ages:</dt>
+              <dd class="bold">{{ entry.ages }}</dd>
+            </span>
+          {% endif %}
+        </dl>
+
+        {% if entry.classCertification.level(2) | length %}
+        <dl>
+          <dt>Certification{{ entry.classCertification.level(2)  | length > 1 ? 's' }}:</dt>
+          {% for certification in entry.classCertification.level(2) %}
+          <dd class="bold">{{ certification.title }}</dd>
+          {% endfor %}
+        </dl>
+        {% endif %}
+
+      </div>
+    </div>
+  </a>
+{% endif %}

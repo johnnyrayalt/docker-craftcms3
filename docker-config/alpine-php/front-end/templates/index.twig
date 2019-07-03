@@ -1,0 +1,83 @@
+{#
+ # Homepage template
+ # ---------------
+ #
+ # When this template gets loaded, it will be because someone has accessed
+ # http://yoursite.com/ (without any URI). Craft checks to see if you have
+ # a Single section set to be the Homepage (as you do, by default), and
+ # loads the section’s Template (this file). A special ‘entry’ variable
+ # will already be set for you, assigned to the Homepage entry.
+ #
+ # It's worth noting that even if you didn't have a Homepage Single section,
+ # as long as this template remains at craft/templates/index.html, it
+ # would still be the one to get loaded when accessing http://yoursite.com/,
+ # albeit without an ‘entry’ variable already set for you.
+ #
+ # See this page for more details on how Craft routes requests:
+ # http://craftcms.com/docs/routing
+ #}
+
+{% extends "_layout" %}
+
+{% block content %}
+  {% include 'partials/_introduction' with { entry: entry } only %}
+  {% include 'partials/_link-collection' %}
+
+  {% if entry.relatedNews | length %}
+    <section class="group featured-news">
+      <h2 class="featured-news--header">What's been happening lately?</h2>
+      {% for entry in entry.relatedNews %}
+        {% include 'news/_post' %}
+      {% endfor %}
+    </section>
+  {% endif %}
+
+  {% if entry.relatedEvents | length %}
+
+    {% set block = entry.relatedEvents.block[0] %}
+    <section class="group upcoming-events">
+    {% include 'partials/_related-events' %}
+    </section>
+  {% endif %}
+
+  <section class="group testimonial">
+    {% set featuredTestimonial = entry.featuredTestimonial %}
+    {% set randomTestimonial = craft.entries.section('testimonials').order('RAND()').first() %}
+
+    {% if featuredTestimonial | length %}
+      {% for testimonial in featuredTestimonial %}
+        {% include 'partials/_testimonial' %}
+      {% endfor %}
+    {% else %}
+      {% include 'partials/_testimonial' with {testimonial: randomTestimonial} %}
+    {% endif %}
+  </section>
+
+  {% if entry.featuredVideo | length %}
+    {% set video = entry.featuredVideo.first %}
+    {% if (video.featuredVideoUrl | length) or (video.videoStrip | length) %}
+    <section class="group homepage-video">
+      <h2>What we're watching</h2>
+      {% switch video.displayView %}
+        {% case "featuredVideoAndVideoStrip" %}
+          <div class="homepage-video--with-strip">
+            {% include 'partials/_video_featured' with { video: video.featuredVideoUrl.first } only %}
+            {% include 'partials/_video_strip' with { videos: video.videoStrip } only %}
+            <a href="/watch" class="watch-more button">Watch more</a>
+          </div>
+        {% case "videoStrip" %}
+          <div class="homepage-video--video-strip">
+            {% include 'partials/_video_strip' with { videos: video.videoStrip } only %}
+            <a href="/watch" class="watch-more button">Watch more</a>
+          </div>
+        {% default %}
+          <div class="homepage-video--featured-video">
+            {% include 'partials/_video_featured' with { video: video.featuredVideoUrl.first } only %}
+            <a href="/watch" class="watch-more button">Watch more</a>
+          </div>
+      {% endswitch %}
+    </section>
+    {% endif %}
+  {% endif %}
+
+{% endblock %}

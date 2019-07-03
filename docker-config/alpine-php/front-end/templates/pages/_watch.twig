@@ -1,0 +1,13 @@
+{% include 'partials/_featured_media' with { entry: entry } only %}
+{% include 'partials/_introduction' with { entry: entry } only %}
+
+<section class="video-grid">
+  {% for video in craft.assets.source('videos') %}
+    {% set item = craft.embeddedAssets.fromAsset(video)%}
+    <a href="{{ item.url }}" target="_blank" class="video-grid--thumbnail">
+      <img src="{{ item.thumbnailUrl }}" class="video-grid--thumbnail-image" />
+      <span class="video-grid--thumbnail-title">{{ video.title }}</span>
+      <span class="video-grid--thumbnail-description">{{ video.body }}</span>
+    </a>
+  {% endfor %}
+</section>

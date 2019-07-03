@@ -1,0 +1,166 @@
+{% extends "_layout" %}
+
+{% set seoTitle = entry.title %}
+{% set seoDescription = entry.description %}
+{% if entry.featuredImage | length %}
+{% set seoImage = entry.featuredImage[0].url %}
+{% endif %}
+
+{% set form = entry.relatedForm %}
+
+{% block content %}
+
+
+  <h1>{{ entry.title }}</h1>
+
+  {% if entry.featuredImage | length %}
+  <figure class="news-single--featured-image">
+    <img src="{{ entry.featuredImage[0].url }}">
+  </figure>
+  {% endif %}
+
+  <div class="news-single--body text">
+    {{ entry.body }}
+
+    {% if entry.applicationLink | length %}
+    <a href="{{ entry.applicationLink }}" target="_blank" class="button donate--recurring-button button-application">View Application</a>
+    {% endif %}
+  </div>
+
+  {% if form | length %}
+  <div class="application-form">
+  {{ form.renderTag }}
+
+
+  {% for page in form.pages %}
+    <div class="fieldset-wrapper">
+      {% for row in page %}
+      <div class="row {{ form.customAttributes.rowClass }}">
+          {% for field in row %}
+
+              {% set width = (12 / (row|length)) %}
+
+              {% set isCheckbox = field.type in ["checkbox"] %}
+
+              {% set columnClass = isCheckbox ? "checkbox" : "form-group" %}
+              {% set columnClass = columnClass ~ (field.errors|length ? " has-error" : "") %}
+              {% set columnClass = columnClass ~ form.customAttributes.columnClass %}
+              {% set columnClass = columnClass ~ " col-lg-" ~ width ~ " col-xs-12" %}
+
+              {% if field.type == "submit" %}
+                  {% set columnClass = columnClass ~ " submit-align-" ~ field.position %}
+              {% endif %}
+
+              {% if field.type == "checkbox_group" %}
+
+                  <div class="{{ columnClass }}">
+                      {{ field.renderLabel({
+                          labelClass: (field.required ? " required" : ""),
+                          instructionsClass: "help-block",
+                          errorClass: "help-block",
+                      }) }}
+
+                      {% for option in field.options %}
+                          <div class="checkbox">
+                              <label>
+                                  <input type="checkbox"
+                                      name="{{ field.handle }}[]"
+                                      value="{{ option.value }}"
+                                      {{ option.value in field.value ? "checked" : "" }}
+                                  />
+                                  {{ option.label }}
+                              </label>
+                          </div>
+                      {% endfor %}
+
+                      {{ field.renderInstructions() }}
+                      {{ field.renderErrors() }}
+                  </div>
+
+              {% elseif field.type == "radio_group" or (field.type == "dynamic_recipients" and field.showAsRadio) %}
+
+                  <div class="{{ columnClass }}">
+                      {{ field.renderLabel({
+                          labelClass: (field.required ? " required" : ""),
+                          instructionsClass: "help-block",
+                          errorClass: "help-block",
+                      }) }}
+
+                      {% for option in field.options %}
+                          <div class="radio">
+                              <label>
+                                  <input type="radio"
+                                      name="{{ field.handle }}"
+                                      value="{{ option.value }}"
+                                      {{ option.value in field.value ? "checked" : "" }}
+                                  />
+                                  {{ option.label }}
+                              </label>
+                          </div>
+                      {% endfor %}
+
+                      {{ field.renderInstructions() }}
+                      {{ field.renderErrors() }}
+                  </div>
+
+              {% elseif field.type == "select" %}
+
+                <label class="form--input-label">{{ field.label }}</label>
+                <div class="form--select-wrapper">
+                  <select name="{{ field.handle }}">
+                    {% for option in field.options %}
+                    <option value="{{ option.value }}">{{ option.label }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+
+              {% elseif field.type == "text" %}
+
+                <div class="form--field-group subscribe-form--field-group">
+                  <label class="form--input-label">{{ field.label }} {% if field.required %}(required){% endif %}</label>
+                  <input type="text" value="{{ field.value }}" name="{{ field.handle }}" class="{% if field.required %}required{% endif %} form--input">
+                </div>
+
+              {% elseif field.type == "email" %}
+
+                <div class="form--field-group subscribe-form--field-group">
+                  <label class="form--input-label">{{ field.label }} {% if field.required %}(required){% endif %}</label>
+                  <input type="email" name="{{ field.handle }}" class="{% if field.required %}required{% endif %} form--input">
+                </div>
+
+              {% elseif field.type == "textarea" %}
+
+                <label class="form--input-label">{{ field.label }} {% if field.required %}(required){% endif %}</label>
+                <textarea name="{{ field.handle }}" class="{% if field.required %}required{% endif %} form--input" rows="{{ field.rows }}">
+                </textarea>
+
+
+              {% elseif field.type == "submit" %}
+
+                  <button type="submit" class="{{ columnClass }} button donate--recurring-button">
+                      {{ field.label }}
+                  </button>
+
+              {% else %}
+
+                  <div class="{{ columnClass }}">
+                      {{ field.render({
+                          class: isCheckbox ? "checkbox" : "form-control",
+                          instructionsClass: "help-block",
+                          instructionsBelowField: true,
+                          labelClass: (field.required ? " (required)" : ""),
+                          errorClass: "help-block",
+                      }) }}
+                  </div>
+
+              {% endif %}
+
+          {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+  {% endfor %}
+  {{ form.renderClosingTag }}
+  </div>
+  {% endif %}
+{% endblock %}

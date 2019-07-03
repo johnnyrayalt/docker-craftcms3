@@ -1,0 +1,27 @@
+div.mce_inline_error {
+  background-color: $color-red;
+  color: $color-white;
+  font-size: $type-size-small;
+  margin: 1rem 0;
+  padding: 1rem;
+}
+
+.subscribe-form {
+  background: $color-white;
+  padding: 2rem;
+  width: 50vw;
+
+  @include tablet {
+    margin-top: 2rem;
+    padding: 1rem;
+    width: 100%;
+  }
+}
+
+.subscribe-form--field-group {
+  width: 100%;
+}
+
+.subscribe-form--submit-button {
+  margin: .5rem 0;
+}

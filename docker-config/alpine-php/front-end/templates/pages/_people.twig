@@ -1,0 +1,8 @@
+{% include 'partials/_featured_media' with { entry: entry } only %}
+{% include 'partials/_introduction' with { entry: entry } only %}
+
+<section class="people-grid">
+  {% for person in entry.people %}
+     {% include 'partials/_person' %}
+  {% endfor %}
+</section>

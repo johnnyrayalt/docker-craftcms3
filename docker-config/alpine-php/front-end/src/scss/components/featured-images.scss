@@ -1,0 +1,21 @@
+.featured-image-caption {
+  background: $color-white;
+  bottom: -20px;
+  color: $color-gray-dark;
+  font-size: $type-size-tiny;
+  padding: .5rem;
+  position: absolute;
+  right: 10%;
+  width: 80%;
+
+  @include tablet {
+    bottom: -30px;
+    right: 0;
+  }
+}
+
+.featured-image-caption--page {
+  left: 10%;
+  right: -8%;
+  width: auto;
+}

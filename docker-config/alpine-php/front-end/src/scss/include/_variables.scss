@@ -1,0 +1,54 @@
+// Colors
+$color-red: rgb(248, 98, 39);
+$color-blue: rgb(4, 178, 238);
+$color-yellow: rgb(240, 237, 61);
+$color-green: rgb(12, 198, 117);
+$color-gray: rgb(220, 227, 235);
+
+$color-red-dark: rgb(168, 16, 0);
+$color-blue-dark: rgb(0, 111, 165);
+$color-yellow-dark: rgb(167, 167, 0);
+$color-green-dark: rgb(0, 125, 51);
+$color-gray-dark: rgb(149, 156, 163);
+
+$color-black: rgb(36, 31, 33);
+$color-white: rgb(255, 255, 255);
+$color-gray-background: rgb(240, 240, 240);
+
+// Color loops for navigation
+$colors: $color-white, $color-red, $color-blue, $color-yellow, $color-green, $color-gray, $color-black;
+$colors-dark: $color-white, $color-red-dark, $color-blue-dark, $color-yellow-dark, $color-green-dark, $color-gray-dark, $color-black;
+$colors-mobile-nav: $color-black, $color-black, $color-black, $color-black, $color-black, $color-black, $color-white;
+
+
+// Typography
+
+$type-family-sans: 'Lelo Web', Helvetica, Arial, sans-serif;
+$type-family-mono: 'Atlas Typewriter Web', Courier, monospaced;
+
+$type-size-root: 16px;
+
+$type-size-base: $type-size-root;
+$type-leading-base: 1.45;
+
+$type-size-big: 1.5rem;
+$type-leading-big: 1.55;
+
+$type-size-huge: 4.5rem;
+$type-leading-huge: 1.1;
+
+$type-size-small: .875rem;
+$type-leading-small: 1.45;
+
+$type-size-tiny: .75rem;
+$type-leading-tiny: 1.2;
+
+$gutter: 1rem;
+
+
+// Screen Sizes
+
+$breakpoint-desktop: 1500px;
+$breakpoint-laptop: 1250px;
+$breakpoint-tablet: 1024px;
+$breakpoint-mobile: 640px;

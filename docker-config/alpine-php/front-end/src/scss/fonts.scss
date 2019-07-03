@@ -1,0 +1,46 @@
+@font-face {
+  font-family: 'Atlas Typewriter Web';
+  font-stretch: normal;
+  font-style:   normal;
+  font-weight:  400;
+  src: url('../fonts/AtlasTypewriter-Regular-Web.eot');
+  src: url('../fonts/AtlasTypewriter-Regular-Web.eot?#iefix') format('embedded-opentype'), url('../fonts/AtlasTypewriter-Regular-Web.woff2') format('woff2'), url('../fonts/AtlasTypewriter-Regular-Web.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Atlas Typewriter Web';
+  font-stretch: normal;
+  font-style:   normal;
+  font-weight:  700;
+  src: url('../fonts/AtlasTypewriter-Bold-Web.eot');
+  src: url('../fonts/AtlasTypewriter-Bold-Web.eot?#iefix') format('embedded-opentype'), url('../fonts/AtlasTypewriter-Bold-Web.woff2') format('woff2'), url('../fonts/AtlasTypewriter-Bold-Web.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Atlas Typewriter Web';
+  font-stretch: normal;
+  font-style: italic;
+  font-weight:  400;
+  src: url('../fonts/AtlasTypewriter-RegularItalic-Web.eot');
+  src: url('../fonts/AtlasTypewriter-RegularItalic-Web.eot?#iefix') format('embedded-opentype'), url('../fonts/AtlasTypewriter-RegularItalic-Web.woff2') format('woff2'), url('../fonts/AtlasTypewriter-RegularItalic-Web.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Lelo Web';
+  font-stretch: normal;
+  font-style:   normal;
+  font-weight:  700;
+  src: url('../fonts/Lelo-Bold.eot');
+  src: url('../fonts/Lelo-Bold.eot?#iefix') format('embedded-opentype'), url('../fonts/Lelo-Bold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'icomoon';
+  font-style: normal;
+  font-weight: normal;
+  src:  url('../fonts/icomoon.eot?d1q5tc');
+  src:  url('../fonts/icomoon.eot?d1q5tc#iefix') format('embedded-opentype'),
+    url('../fonts/icomoon.ttf?d1q5tc') format('truetype'),
+    url('../fonts/icomoon.woff?d1q5tc') format('woff'),
+    url('../fonts/icomoon.svg?d1q5tc#icomoon') format('svg');
+}

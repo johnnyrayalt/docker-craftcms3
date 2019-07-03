@@ -1,0 +1,34 @@
+{% include 'partials/_link-collection' %}
+
+{% include 'partials/_introduction' with { entry: entry } only %}
+
+{% if entry.body | length %}
+  <article class="landing-page--text text">
+    {{ entry.body }}
+  </article>
+{% endif %}
+
+{% set featuredMedia = entry.featuredMedia %}
+{% if featuredMedia.first | length %}
+  <figure class="featured-media">
+    {% for media in featuredMedia %}
+      {% if media.type == 'featuredImage' and media.image.first | length %}
+        <div class="featured-thumb--featured-image">
+          <img src="{{ media.image.first.getUrl('circle') }}">
+        </div>
+      {% elseif media.type == 'featuredVideo' %}
+        {% set embed = craft.embeddedAssets.fromAsset(media.video.first) %}
+        {% if embed %}
+          {{ embed.safeHtml|raw }}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </figure>
+{% endif %}
+
+{% if entry.relatedEvents | length %}
+  {% set block = entry.relatedEvents.block[0] %}
+
+  {% include 'partials/_related-events' %}
+
+{% endif %}

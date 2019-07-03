@@ -1,0 +1,32 @@
+.breadcrumbs {
+  font-size: $type-size-small;
+  margin: 0;
+}
+
+.breadcrumb {
+  display: inline-block;
+  padding: 0 1em 0 0;
+  position: relative;
+
+  &::after {
+    color: $color-black;
+    content: '/';
+    position: absolute;
+    right: 0;
+  }
+
+  &:last-of-type {
+    &::after {
+      display: none;
+    }
+  }
+}
+
+.breadcrumb--parent-page-link {
+  @include rollover;
+  color: $color-gray-dark;
+}
+
+.breadcrumb--current-page-link {
+  color: $color-black;
+}

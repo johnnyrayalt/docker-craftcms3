@@ -1,0 +1,85 @@
+// Screen Sizes
+
+@mixin mobile {
+  @media screen and (max-width: $breakpoint-mobile) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media screen and (max-width: $breakpoint-tablet) {
+    @content;
+  }
+}
+
+@mixin laptop {
+  @media screen and (max-width: $breakpoint-laptop) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media screen and (max-width: $breakpoint-desktop) {
+    @content;
+  }
+}
+
+@mixin clearfix {
+  &::before,
+  &::after {
+    clear: both;
+    content: '';
+    display: table;
+  }
+}
+
+@mixin icon-gray {
+  background-position: 0;
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  display: inline-block;
+  height: 20px;
+  margin-left: 5px;
+  width: 20px;
+}
+
+@mixin paper {
+  background: $color-white;
+  margin: 2rem 0;
+  padding: .7rem 1.1rem;
+}
+
+@mixin round-image($size: 15vw) {
+  border-radius: 100%;
+  height: $size;
+  overflow: hidden;
+  width: $size;
+
+  img {
+    height: auto;
+    max-width: 100%;
+  }
+}
+
+@mixin rollover {
+  cursor: pointer;
+  transition: color .25s ease-in-out;
+
+  &:hover {
+    color: $color-blue;
+  }
+}
+
+@mixin color-pop {
+  transition: transform 150ms ease-in-out;
+
+  &:hover {
+    background: $color-blue;
+    cursor: pointer;
+    transform: translateY(-2px);
+
+    .inline-image--caption {
+      background: $color-blue;
+    }
+  }
+}

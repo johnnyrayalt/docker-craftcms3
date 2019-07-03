@@ -1,0 +1,15 @@
+{#
+ # Video featured
+ # ---------------
+ # Requires variable `video`
+ #
+#}
+
+<div class="featured-video-container">
+  {% include 'partials/_video-embed' with { video: video } only %}
+
+  <div class="featured-video--info">
+    <span class="featured-video--title">{{ video.title }}</span>
+    <span class="featured-video--description">{{ video.body }}</span>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+{% extends "_layout" %}
+{% set seoTitle = "Press Portal" %}
+{% set seoDescription = entry.introduction %}
+{% requireLogin %}
+
+{% block content %}
+  <section>
+    <header class="section-header">
+      <h1 class="section-header--title">Press Portal</h1>
+    </header>
+    <div class="callout">{{ entry.introduction }}</div>
+  </section>
+
+  <div class="press-portal--body text news-single--body">
+    {{ entry.body }}
+  </div>
+
+  {% if entry.downloads | length %}
+    <div class="press-portal--body">
+      <h2>Downloads</h2>
+
+      {% for block in entry.downloads %}
+        <ul class="press-portal--download-collection">
+          <p class="press-portal--download-collection-header">{{ block.downloadsHeader }}</p>
+          {% for download in block.downloadsFiles %}
+            {% if download.kind == 'image' %}
+              <a class="press-portal--download-collection-image" href="{{ download.url }}">
+                <img src="{{ download.url }}" class=""/>
+                <span class="press-portal--download-collection-image-info">({{ download.extension|upper }}, {{ download.size|filesize }})</span>
+              </a>
+            {% else %}
+              <li><a href="{{ download.url }}">{{ download.title}}</a> <span class="press-portal--download-collection-image-info">({{ download.extension|upper }}, {{ download.size|filesize }})</span></li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endfor %}
+
+    </div>
+  {% endif %}
+
+  <section>
+    <article>
+      {% for entry in craft.entries.section('pressPortal') %}
+        {% include 'news/_post' %}
+      {% endfor %}
+    </article>
+  </section>
+{% endblock %}

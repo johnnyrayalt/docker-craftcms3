@@ -1,0 +1,154 @@
+.donate--body,
+.donate--select-level,
+.donate--recurring,
+.donate--alternate-payment {
+  @include paper;
+  width: 85%;
+
+  @include tablet {
+    width: 100%;
+  }
+}
+
+.donate--donation-level {
+  border: 1px solid $color-gray-dark;
+  display: block;
+  margin-bottom: 1rem;
+  padding: 1.5rem;
+  text-decoration: none;
+  width: 100%;
+
+  &:hover {
+    border-color: $color-red;
+    color: $color-red;
+
+    .empty {
+      border-color: inherit;
+    }
+  }
+}
+
+.donate--one-time-select {
+  margin-bottom: 1rem;
+}
+
+.donate--level-amount {
+  display: inline-block;
+  font-family: $type-family-sans;
+  font-size: 3rem;
+  font-weight: bold;
+  line-height: 1.04;
+  margin-left: -1rem;
+  text-align: center;
+  width: 20%;
+
+  @include laptop {
+    width: 25%;
+  }
+
+  @include mobile {
+    margin: 0 0 1rem;
+    text-align: left;
+    width: 100%;
+  }
+
+
+  &.empty {
+    border-bottom: 3px solid $color-black;
+    height: 55px;
+    margin-left: 5px;
+    margin-right: 0;
+    width: 65px;
+
+    @include mobile {
+      height: 0;
+      margin-bottom: .5rem;
+      vertical-align: bottom;
+    }
+  }
+}
+
+.donate--level-description {
+  display: inline-block;
+  font-size: .9rem;
+  vertical-align: top;
+  width: 80%;
+
+  @include laptop {
+    width: 75%;
+  }
+
+  @include mobile {
+    width: 100%;
+  }
+}
+
+// Donate Form
+
+.donate--recurring {
+  margin-bottom: 2rem;
+}
+
+.donate--recurring-text {
+  display: inline-block;
+  font-size: $type-size-big;
+}
+
+.donate--recurring-input {
+  display: inline-block;
+  font-size: 20px;
+  font-weight: 700;
+  height: 60px;
+  position: relative;
+  transform: translateY(3px);
+  width: 7rem;
+  margin: 0;
+  padding: 0 0 0 2rem;
+
+
+  @include mobile {
+    // margin-left: 0;
+  }
+}
+
+.donate--recurring-select {
+  font-size: 1.5rem;
+}
+
+.donate--recurring-symbol {
+  font-family: $type-family-sans;
+  font-size: 2rem;
+  font-weight: 700;
+  left: 10px;
+  position: absolute;
+  transform: translateY(11px);
+  z-index: 1;
+}
+
+.donate--recurring-button {
+  display: block !important;
+  margin: 1rem 0 0;
+}
+
+// Donate: Thank You
+.donate-thank-you--summary {
+  @include paper;
+  display: inline-block;
+  margin-bottom: 12rem;
+
+  h2 {
+    margin-bottom: .5rem;
+  }
+}
+
+.donate-thank-you--text {
+  margin-bottom: .5rem;
+}
+
+.donate-thank-you--line-item {
+  font-size: $type-size-small;
+}
+
+.donate-thank-you--body {
+  margin: 1rem 0;
+}

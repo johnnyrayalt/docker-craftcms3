@@ -1,0 +1,20 @@
+{% extends "_layout" %}
+
+{% set seoTitle = entry.title %}
+{% set seoDescription = entry.introduction %}
+
+{% block content %}
+
+<section>
+  <header class="section-header">
+    <h1 class="section-header--title">{{ entry.title }}</h1>
+    {% include 'partials/_breadcrumbs' with { entry: entry } only %}
+  </header>
+
+  {% include [
+    'pages/_' ~ entry.type,
+    'pages/_pages'
+  ] %}
+</section>
+
+{% endblock %}

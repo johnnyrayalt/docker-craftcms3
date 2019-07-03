@@ -1,0 +1,46 @@
+{% extends "_layout" %}
+{% block content %}
+
+<article class="pages">
+  <section>
+    <header class="section-header">
+      <h1 class="section-header--title">{{ entry.title }}</h1>
+      <ul class="breadcrumbs">
+        <li class="breadcrumb breadcrumb--parent-page-link"><a href="/media-education">Media Education</a></li>
+        <li class="breadcrumb breadcrumb--current-page-link"><a href="/media-education/certifications">{{ entry.title }}</a></li>
+      </ul>
+    </header>
+
+    {% include 'partials/_featured_media' with { entry: entry } only %}
+    {% include 'partials/_introduction' with { entry: entry } only %}
+
+  </section>
+
+  {% if entry.body | length %}
+  <section class="rich-matrix--text">
+    <div class="rich-matrix--text-block text">
+        {{ entry.body }}
+    </div>
+  </section>
+  {% endif %}
+
+  {% for category in craft.categories.group('certifications').level(1) %}
+  <section class="collapsible text">
+    <div class="collapsible--subheader">
+      <button class="collapsible-button" aria-expanded="false" aria-controls="collapsible-{{ loop.index }}">
+        {{ category.title | smartypants }}
+      </button>
+    </div>
+    <div class="collapsible--description" id="collapsible-{{ loop.index }}" aria-hidden="true">
+      {% if category.children | length %}
+        {% for childCategory in category.children %}
+        <h4>{{ childCategory.title }}</h4>
+        {{ childCategory.description }}
+        <p><a href="/calendar?certification={{ childCategory.slug }}">View Upcoming Classes</a></p>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </section>
+  {% endfor %}
+</article>
+{% endblock %}

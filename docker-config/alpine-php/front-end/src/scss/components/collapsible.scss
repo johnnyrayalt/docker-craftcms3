@@ -1,0 +1,48 @@
+.collapsible-button {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: $type-size-base;
+  font-weight: bold;
+  line-height: $type-leading-base;
+  overflow: visible;
+  padding: 0;
+  position: relative;
+  text-align: left;
+
+  &::before {
+    transition: transform 150ms ease-in-out;
+    background-image: url('../images/arrow.svg');
+    content: '';
+    display: block;
+    height: 13px;
+    left: -20px;
+    position: absolute;
+    top: 1px;
+    width: 8px;
+  }
+}
+
+[aria-hidden] {
+  display: none;
+}
+
+[aria-hidden='false'] {
+  display: block;
+}
+
+[aria-expanded='true'] {
+  &::before {
+    transform: rotate(90deg);
+    transform-origin: center center;
+  }
+}
+
+.collapsible--subheader {
+  margin: .5rem 0;
+}
+
+.collapsible--description {
+  margin-top: 1rem;
+}

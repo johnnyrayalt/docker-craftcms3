@@ -1,0 +1,33 @@
+{% set events = craft.calendar.events({
+    dateRangeStart: craft.request.param("dateRangeStart"),
+    dateRangeEnd: craft.request.param("dateRangeEnd"),
+}) %}
+
+[
+  {% for event in events %}
+
+  {% if event.calendar.handle == 'events' %}
+  {% set eventUrl = siteUrl ~ 'calendar/event/' ~ event.id %}
+  {% elseif event.courseEntry | length %}
+  {% set eventUrl = siteUrl ~ 'calendar/' ~ event.courseEntry[0].slug %}
+  {% else %}
+  {% set eventUrl = null %}
+  {% endif %}
+  {
+
+    "id": "{{ event.id }}",
+    "title": "{{ event.title }}",
+    "start": "{{ event.startDate.format('c') }}",
+    "end": "{{ event.endDate.format('c') }}",
+    "url": "{{ eventUrl }}",
+    "calendar": "{{ event.calendar.handle }}",
+    "allDay": "{{ event.allDay }}",
+    "multiDay": "{{ event.multiDay }}"
+  }
+  {{ not loop.last ? ', ' }}
+  {% endfor %}
+]
+
+{#
+{{ events.eventsAsSimpleObject|json_encode|raw }}
+#}
