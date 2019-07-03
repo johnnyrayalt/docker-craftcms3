@@ -1,39 +1,26 @@
-FROM php:7.2-fpm-alpine
+### STAGE 1
+FROM php:7.2-fpm-alpine as base
 
-### ALPINE PACKAGES
-RUN apk --update add \
+### ALPINE PACKAGES NEEDED TO INSTALL COMPOSER AND CRAFT
+RUN apk add --no-cahce \
   autoconf \
   build-base \
   git \
   icu-dev \
-  imagemagick-dev \
   libzip-dev \
   libcrypto1.1 libssl1.1 libstdc++ \
-  musl \
-  mariadb-client \
   ncurses-libs \
-  openssl-dev \
-  tzdata \
   wget \
   unzip \
-  zlib \
-  ### PHP PACKAGES
+  # zlib \
+  ### PHP INSTALL USING DOCKER
   && docker-php-ext-install \
   iconv \
   intl \
-  mysqli \
-  pdo_mysql \
-  sockets \
   sysvmsg sysvsem sysvshm \
   zip \
-  ### PHP INSTALL USING PECL
-  && pecl install \
-  imagick \
-  ### PHP INSTALL USING DOCKER
-  && docker-php-ext-enable \
-  imagick \
-  && apk del build-base \
-  && rm -rf /var/cache/apk/*
+  ### DELETE BUILD SPECIFIC PACKAGES
+  && apk del build-base
 
 ENV COMPOSER_HOME /composer
 
@@ -69,4 +56,33 @@ RUN sed -i "/'defaultWeekStartDay' => 1,/a 'backupDbOnUpdate' => false," ./html/
 
 RUN chown -R www-data:www-data /var/www/html
 
-CMD php-fpm
+### STAGE 2
+FROM php:7.2-fpm-alpine
+
+### ALPINE PACKAGES NEEDED TO RUN CRAFT
+RUN apk add --no-cache \
+  autoconf \
+  build-base \
+  imagemagick-dev \
+  libzip-dev \
+  tzdata \
+  unzip \
+  ### PHP INSTALL USING PECL
+  && pecl install \
+  imagick \
+  ### PHP INSTALL USING DOCKER
+  && docker-php-ext-install \
+  pdo_mysql \
+  sockets \
+  zip \
+  ### PHP ENABLE FOR DOCKER
+  && docker-php-ext-enable \
+  imagick \
+  ### DELETE BUILD SPECIFIC PACKAGES
+  && apk del build-base
+
+COPY --from=base /var/www /var/www
+
+RUN chown -R www-data:www-data /var/www/html
+
+CMD ["php-fpm"]
