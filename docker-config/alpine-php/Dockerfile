@@ -2,7 +2,7 @@
 FROM php:7.2-fpm-alpine as base
 
 ### ALPINE PACKAGES NEEDED TO INSTALL COMPOSER AND CRAFT
-RUN apk add --no-cahce \
+RUN apk add --no-cache \
   autoconf \
   build-base \
   git \
@@ -12,7 +12,6 @@ RUN apk add --no-cahce \
   ncurses-libs \
   wget \
   unzip \
-  # zlib \
   ### PHP INSTALL USING DOCKER
   && docker-php-ext-install \
   iconv \
@@ -82,6 +81,7 @@ RUN apk add --no-cache \
   && apk del build-base
 
 COPY --from=base /var/www /var/www
+# COPY --from=stage 
 
 RUN chown -R www-data:www-data /var/www/html
 
