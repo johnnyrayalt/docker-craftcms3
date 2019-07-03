@@ -61,6 +61,7 @@ RUN composer create-project craftcms/craft /var/www/html
 
 COPY --chown=www-data:www-data ./docker-config/alpine-php/front-end/templates /var/www/html/templates
 COPY --chown=www-data:www-data ./docker-config/alpine-php/front-end/src /var/www/html/src
+COPY --chown=www-data:www-data ./docker-config/alpine-php/front-end/public /var/www/html/public
 
 
 ### turns off backing up DB when updating as this can break the install

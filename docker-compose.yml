@@ -4,7 +4,7 @@ services:
 
 ##########################
 ##         NGINX        ##
-## nginx:1.15.12-alpine ##
+## nginx:1.17.1-alpine ##
 ##########################
   nginx:
     build: 
