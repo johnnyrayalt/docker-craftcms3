@@ -81,7 +81,6 @@ RUN apk add --no-cache \
   && apk del build-base
 
 COPY --from=base /var/www /var/www
-# COPY --from=stage 
 
 RUN chown -R www-data:www-data /var/www/html
 
